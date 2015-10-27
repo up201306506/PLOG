@@ -101,7 +101,10 @@ jogar :- 	repeat,
 
 
 :- dynamic baralho/1.
-baralho([ [2|2], [2|1], [1|1], [3|2] ]).
+baralho([ [0|0], [0|1], [0|2], [0|3], [0|4], [0|5], [0|6], [0|7], [1|1], [1|2], 
+			[1|3], [1|4], [1|5], [1|6], [1|7], [2|2], [2|3], [2|4], [2|5], [2|6],
+			[2|7], [3|3], [3|4], [3|5], [3|6], [3|7], [4|4], [4|5], [4|6], [4|7],
+			[5|5], [5|6], [5|7], [6|6], [6|7], [7|7] ]).
 
 baralho_vazio :- 	baralho(B),
 					mostra_linha(B),
@@ -124,16 +127,27 @@ first(F, [F|_]).
 delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
 						append(A1,A2,L2).
 
+						:- dynamic jogador_escolhido/1.
+jogador_escolhido(a).
+
+trocar_jogador(J) :- jogador(X),
+						X \= J,
+						retract(jogador_escolhido(J)),
+						assert(jogador_escolhido(X)).
+						
+						
 dar_baralho :- 	repeat,
 				baralho(B),
 				get_peca_from_baralho(P),
 				delete_one(P,B,C),
 				retract(baralho(B)),
 				assert(baralho(C)),
-				acrecentar_peca_mao([P],a),
+				jogador_escolhido(J),
+				acrecentar_peca_mao([P],J),
+				trocar_jogador(J),
 				baralho(Y),
 				length(Y, 0).
-				
+		
 				
 
 
