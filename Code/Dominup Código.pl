@@ -1,46 +1,14 @@
 ﻿
 :- use_module(library(random)).
+:- use_module(functions).
+
+:-set_random(seed(888)).
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
-mostra_peca([V|0]) :- write('     ').
-mostra_peca([V|H]) :- write('['),
-						write(V),
-						write('|'),
-						write(H),
-						write(']').
-						
-mostra_linha([]).
-mostra_linha([P|[]]) :- mostra_peca(P).
-mostra_linha([P|R]) :- mostra_peca(P),
-					mostra_linha(R).
 
-mostra([L|[]]) :- mostra_linha(L).
-mostra([L|R]) :- mostra_linha(L),
-				nl,
-				mostra(R).
-				
-				
-mostra_tabuleiro([L|R]) :-  write('  1    2    3    4    5    6    7    8    9   10   11   12  '), nl,
-							mostra([L|R]).
 			
-%%%%%%Exemplo - comando |?- mostra_tab_exemplo. em Prolog
-
-tabuleiro([ [[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]], 
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]] ]).
-
-mostra_tab_exemplo :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -72,14 +40,6 @@ acrecentar_peca_mao(P, J) :- 	mao(J, V),
 								retract(mao(J,V)),
 								assert(mao(J, N)).
 										
-						
-mudar_mao :-	mostra_mao_exemplo,
-				retract(mao(J, T)),
-				nl,
-				assert(mao(a, [ [2|1],[3|4],[5|5],[6|6],[8|1] ])),
-				mostra_mao_exemplo.				
-							
-
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Estado			%%
@@ -121,8 +81,6 @@ get_peca_from_baralho(P) :- baralho(B),
 							random(0, LS, X),
 							element_at(P, B, X).
 							
-first(F, [F|_]).
-
 
 delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
 						append(A1,A2,L2).
@@ -134,9 +92,10 @@ trocar_jogador(J) :- jogador(X),
 						X \= J,
 						retract(jogador_escolhido(J)),
 						assert(jogador_escolhido(X)).
-						
-						
-dar_baralho :- 	repeat,
+				
+
+dar_baralho :- 	
+				repeat,
 				baralho(B),
 				get_peca_from_baralho(P),
 				delete_one(P,B,C),
@@ -148,10 +107,6 @@ dar_baralho :- 	repeat,
 				baralho(Y),
 				length(Y, 0).
 		
-				
-
-
-
-		
-		
-		
+quem_tem_peca(P, J) :-
+						mao(J,M),
+						member(P,M).
