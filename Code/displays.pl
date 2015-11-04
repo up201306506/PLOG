@@ -60,10 +60,11 @@ mostra_N_col(N,L) :-
 				
 mostra_tabuleiro([L|R]) :-  tabuleiro([L|R]),
 							mostra_N_col(0, 12), nl,
-							mostra(1, [L|R]).
+							mostra(1, [L|R]),
+							nl.
 
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
-exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L),nl.
+exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
 
 
 
