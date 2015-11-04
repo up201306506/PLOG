@@ -1,5 +1,11 @@
 ﻿%%%%%%%%%%%%%%%%%%%%%%
-%%	Displays		%%
+%%	Limpar			%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+cls :- write('\e[2J').
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
 				
 
@@ -66,6 +72,12 @@ mostra_tabuleiro([L|R]) :-  tabuleiro([L|R]),
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
 exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
 
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Mãos 			%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+
 mostra_mao_peca([V|H]) :- write('['),
 						write(V),
 						write('|'),
@@ -86,3 +98,19 @@ mostra_mao_jogador(J) :-
 	nl, 
 	mostra_mao_linha(M),
 	nl.
+	
+	
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Menu 			%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+menu_principal :-
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('++                                    ++'), nl,
+	write('++           D O M I N U P            ++'), nl,
+	write('++                                    ++'), nl,
+	write('++ ---------------------------------- ++'), nl,
+	write('++            1 - Jogar               ++'), nl,
+	write('++            2 - Regras              ++'), nl,
+	write('++            3 - Sair                ++'), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl.

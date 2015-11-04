@@ -176,7 +176,7 @@ baralho_dar_as_pecas :-
 				length(Y, 0).		
 
 %%%%%%%%%%%%%%%%%%%%%%
-%%	Listas			%%
+%% Manipular Listas	%%
 %%%%%%%%%%%%%%%%%%%%%%
 				
 element_at(X,[X|_],1).
