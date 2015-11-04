@@ -58,11 +58,12 @@ mostra_N_col(N,L) :-
 					write('  '),
 					mostra_N_col(NN, L).				
 				
-mostra_tabuleiro([L|R]) :-  mostra_N_col(0, 12), nl,
+mostra_tabuleiro([L|R]) :-  tabuleiro([L|R]),
+							mostra_N_col(0, 12), nl,
 							mostra(1, [L|R]).
 
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
-exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
+exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L),nl.
 
 
 
@@ -86,4 +87,5 @@ mostra_mao_jogador(J) :-
 	write(J),
 	write(':'), 
 	nl, 
-	mostra_mao_linha(M).
+	mostra_mao_linha(M),
+	nl.

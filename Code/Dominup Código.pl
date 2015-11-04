@@ -15,7 +15,7 @@ jogador(a).
 jogador(b).
 
 :- dynamic tabuleiro/1.
-tabuleiro([ [[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]], 
+tabuleiro([ [[1|1],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
@@ -26,7 +26,7 @@ tabuleiro([ [[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
 			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]],
-			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0]] ]).
+			[[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[0|0],[1|1]] ]).
 			
 
 :- dynamic mao/2.			
@@ -62,15 +62,25 @@ jogadro_trocar_vez(J) :- jogador(X),
 %%%%%%%%%%%%%%%%%%%%%%
 
 %%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_set(TI, C, V, A, TF)
+replace([H|T], I, X, [H|R]):- 
+	I > 0, 
+	I1 is I-1, 
+	replace(T, I1, X, R).
 
-%%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_get(T, C, V, A)
+tabuleiro_set(TI, [C|L], V, A, TF) :-
+	tabuleiro(TI),
+	setCell(L, C, TI, [V|A], TF),
+	retract(tabuleiro(TI)),
+	assert(tabuleiro(TF)).
+	
+tabuleiro_get(T,[C|L], V, A) :- 
+	tabuleiro(T),
+	element_at(Y, T, L),
+	element_at([V|A], Y, C).
 
 %%%!!!!!!!!!!!!!!!!!!!
 %tabuleiro_jogar_peca_climb(P, C1, C2)
 %tabuleiro_jogar_peca_expand(P, C1, C2)
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -87,9 +97,14 @@ mao_acrecentar_peca(P, J) :- 	mao(J, V),
 								assert(mao(J, N)).
 								
 %%%!!!!!!!!!!!!!!!!!!!								
-%mao_remover_peca(J, P) :-
+mao_remover_peca(J, P) :- 
+	jogador(J),
+	mao(J,MV),
+	delete_one(P, MV, MN),
+	retract(mao(J,MV)),
+	assert(mao(J,MN)).
 						
-%%%!!!!!!!!!!!!!!!!!!!								
+%%%!!!!!!!!!!!!!!!!!!!							
 %mao_escolher_peca(J, X) :-
 
 %%%!!!!!!!!!!!!!!!!!!!
@@ -107,18 +122,22 @@ mao_quem_tem_peca(P, J) :-
 %%%%%%%%%%%%%%%%%%%%%%
 
 jogar :- 	baralho_dar_as_pecas,
+			mostra_tabuleiro(_),
 			!,
-			
-			%procurar a peca 7|7 e joga-a,
-			
+			mostra_mao_jogador(a),
+			mostra_mao_jogador(b),
+			mao_quem_tem_peca([7|7], JI),
+			mao_remover_peca(JI, [7|7]),
+			tabuleiro_set(_, [6|6], 7, 1, _),
+			tabuleiro_set(_, [6|7], 7, 1, _),
+			mostra_mao_jogador(JI),
 			!,
 			main.
 
 
 			
 main :- 	repeat,
-			tabuleiro(T),
-			mostra_tabuleiro(T).
+			mostra_tabuleiro(_).
 			%mostrar a mao do jogador de qum for a vez
 			%pedir qual a peca que joga-a
 			%pedir as coordenadas
@@ -172,3 +191,13 @@ element_at(X,[_|L],K) :- element_at(X,L,K1), K is K1 + 1.
 delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
 						append(A1,A2,L2).
 
+setCell(1, Col, [H|T], Piece, [H1|T]) :-
+	setCellCol(Col,H,Piece,H1).
+setCell(N,Col,[H|T],Piece,[H|T1]):-
+	Prev is N-1,
+	setCell(Prev, Col, T, Piece, T1).
+
+setCellCol(1, [_|T], Piece, [Piece|T]).
+setCellCol(N, [H|T], Piece, [H|T1]):-
+	Prev is N-1,
+	setCellCol(Prev, T, Piece, T1).
