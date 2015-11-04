@@ -77,11 +77,6 @@ jogadro_trocar_vez(J) :- jogador(X),
 %%	mao jogador		%%
 %%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%Exemplo - comando |?- exemplo_mostra_mao. em Prolog
-
-
-exemplo_mostra_mao :- mao(J, L), write('Mao do Jogador '), write(J), jogador(J), write(':'), nl, mostra_linha(L).
-
 % V - Mao Velha
 % N - Mao Nova
 % J - Jogador

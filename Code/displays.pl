@@ -65,5 +65,25 @@ mostra_tabuleiro([L|R]) :-  mostra_N_col(0, 12), nl,
 exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
 
 
-%%%!!!!!!!!!!!!!!!!!!!
-%mostra_mao_jogador(J)
+
+
+
+mostra_mao_peca([V|H]) :- write('['),
+						write(V),
+						write('|'),
+						write(H),
+						write(']').
+mostra_mao_linha([]).
+mostra_mao_linha([P|[]]) :- mostra_mao_peca(P).
+mostra_mao_linha([P|R]) :- mostra_mao_peca(P),
+					mostra_mao_linha(R).
+
+
+mostra_mao_jogador(J) :- 
+	jogador(J),
+	mao(J, M),
+	write('Mao do Jogador '),
+	write(J),
+	write(':'), 
+	nl, 
+	mostra_mao_linha(M).
