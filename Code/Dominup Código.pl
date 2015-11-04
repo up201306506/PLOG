@@ -63,14 +63,14 @@ jogadro_trocar_vez(J) :- jogador(X),
 
 tabuleiro_set(TI, [C|L], V, A, TF) :-
 	tabuleiro(TI),
-	setCell(L, C, TI, [V|A], TF),
+	matrix_setCell(L, C, TI, [V|A], TF),
 	retract(tabuleiro(TI)),
 	assert(tabuleiro(TF)).
 	
 tabuleiro_get(T,[C|L], V, A) :- 
 	tabuleiro(T),
-	element_at(Y, T, L),
-	element_at([V|A], Y, C).
+	list_element_at(Y, T, L),
+	list_element_at([V|A], Y, C).
 
 %%%!!!!!!!!!!!!!!!!!!!
 %tabuleiro_jogar_peca_climb(P, C1, C2)
@@ -93,7 +93,7 @@ mao_acrecentar_peca(P, J) :- 	mao(J, V),
 mao_remover_peca(J, P) :- 
 	jogador(J),
 	mao(J,MV),
-	delete_one(P, MV, MN),
+	list_delete_one(P, MV, MN),
 	retract(mao(J,MV)),
 	assert(mao(J,MN)).
 						
@@ -160,13 +160,13 @@ baralho_get_peca_from(P) :- baralho(B),
 							length(B, L),
 							LS is L + 1,
 							random(0, LS, X),
-							element_at(P, B, X).
+							list_element_at(P, B, X).
 
 baralho_dar_as_pecas :- 	
 				repeat,
 				baralho(B),
 				baralho_get_peca_from(P),
-				delete_one(P,B,C),
+				list_delete_one(P,B,C),
 				retract(baralho(B)),
 				assert(baralho(C)),
 				jogador_escolhido(J),
@@ -179,20 +179,20 @@ baralho_dar_as_pecas :-
 %% Manipular Listas	%%
 %%%%%%%%%%%%%%%%%%%%%%
 				
-element_at(X,[X|_],1).
-element_at(X,[_|L],K) :- element_at(X,L,K1), K is K1 + 1.
+list_element_at(X,[X|_],1).
+list_element_at(X,[_|L],K) :- list_element_at(X,L,K1), K is K1 + 1.
 			
 
-delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
+list_delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
 						append(A1,A2,L2).
 
-setCell(1, Col, [H|T], Piece, [H1|T]) :-
-	setCellCol(Col,H,Piece,H1).
-setCell(N,Col,[H|T],Piece,[H|T1]):-
+matrix_setCell(1, Col, [H|T], Piece, [H1|T]) :-
+	matrix_setCellCol(Col,H,Piece,H1).
+matrix_setCell(N,Col,[H|T],Piece,[H|T1]):-
 	Prev is N-1,
-	setCell(Prev, Col, T, Piece, T1).
+	matrix_setCell(Prev, Col, T, Piece, T1).
 
-setCellCol(1, [_|T], Piece, [Piece|T]).
-setCellCol(N, [H|T], Piece, [H|T1]):-
+matrix_setCellCol(1, [_|T], Piece, [Piece|T]).
+matrix_setCellCol(N, [H|T], Piece, [H|T1]):-
 	Prev is N-1,
-	setCellCol(Prev, T, Piece, T1).
+	matrix_setCellCol(Prev, T, Piece, T1).

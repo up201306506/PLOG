@@ -105,6 +105,7 @@ mostra_mao_jogador(J) :-
 %%%%%%%%%%%%%%%%%%%%%%
 
 menu_principal :-
+	cls,
 	write('++++++++++++++++++++++++++++++++++++++++'), nl,
 	write('++                                    ++'), nl,
 	write('++           D O M I N U P            ++'), nl,
@@ -113,4 +114,13 @@ menu_principal :-
 	write('++            1 - Jogar               ++'), nl,
 	write('++            2 - Regras              ++'), nl,
 	write('++            3 - Sair                ++'), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl.
+	
+menu_dificuldade :-
+	cls,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('++   Dificuldade?                     ++'), nl,
+	write('++ ---------------------------------- ++'), nl,
+	write('++  1 - Fácil                         ++'), nl,
+	write('++  2 - Dificil                       ++'), nl,
 	write('++++++++++++++++++++++++++++++++++++++++'), nl.
