@@ -89,8 +89,7 @@ mao_acrecentar_peca(P, J) :- 	mao(J, V),
 								append(P,V,N),
 								retract(mao(J,V)),
 								assert(mao(J, N)).
-								
-%%%!!!!!!!!!!!!!!!!!!!								
+															
 mao_remover_peca(J, P) :- 
 	jogador(J),
 	mao(J,MV),
@@ -101,13 +100,15 @@ mao_remover_peca(J, P) :-
 %%%!!!!!!!!!!!!!!!!!!!							
 %mao_escolher_peca(J, X) :-
 
-%%%!!!!!!!!!!!!!!!!!!!
-%mao_vazia(J)
+mao_vazia(J) :-
+	jogador(J),
+	mao(J, M),
+	length(M,0).
 						
 								
 mao_quem_tem_peca(P, J) :-
-						mao(J,M),
-						member(P,M).
+	mao(J,M),
+	member(P,M).
 
 				
 
@@ -118,19 +119,19 @@ mao_quem_tem_peca(P, J) :-
 jogar :- 	baralho_dar_as_pecas,
 			mostra_tabuleiro(_),
 			!,
-			mostra_mao_jogador(a),
-			mostra_mao_jogador(b),
-			mao_quem_tem_peca([7|7], JI),
-			mao_remover_peca(JI, [7|7]),
-			tabuleiro_set(_, [6|6], 7, 1, _),
-			tabuleiro_set(_, [6|7], 7, 1, _),
-			mostra_mao_jogador(JI),
+			main_jogada_inicial,
 			!,
-			main.
+			main_loop.
 
 
 			
-main :- 	repeat,
+main_jogada_inicial :-
+	mao_quem_tem_peca([7|7], JI),
+	mao_remover_peca(JI, [7|7]),
+	tabuleiro_set(_, [6|6], 7, 1, _),
+	tabuleiro_set(_, [6|7], 7, 1, _).
+			
+main_loop :- 	repeat,
 			mostra_tabuleiro(_).
 			%mostrar a mao do jogador de qum for a vez
 			%pedir qual a peca que joga-a

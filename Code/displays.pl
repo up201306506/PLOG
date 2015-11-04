@@ -66,10 +66,6 @@ mostra_tabuleiro([L|R]) :-  tabuleiro([L|R]),
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
 exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L).
 
-
-
-
-
 mostra_mao_peca([V|H]) :- write('['),
 						write(V),
 						write('|'),
