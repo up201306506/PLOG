@@ -111,7 +111,8 @@ tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]) :-
 		TV1 == V1,
 		TV2 == V2.
 	
-
+%%%!!!!!!!!!!!!!!!!!!!
+%tabuleiro_reiniciar
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	mao jogador		%%
@@ -144,18 +145,25 @@ mao_quem_tem_peca(P, J) :-
 	mao(J,M),
 	member(P,M).
 
+%%%!!!!!!!!!!!!!!!!!!!
+%mao_reiniciar
+
 				
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Main			%%
 %%%%%%%%%%%%%%%%%%%%%%
 
-jogar :- 	baralho_dar_as_pecas,
-			mostra_tabuleiro(_),
-			!,
-			main_jogada_inicial,
-			!,
-			main_loop.
+dominup :- menu_principal.
+
+jogar(Dificuldade) :- 	
+	baralho_reiniciar,
+	baralho_dar_as_pecas,
+	mostra_tabuleiro(_),
+	!,
+	main_jogada_inicial,
+	!,
+	main_loop(Dificuldade).
 
 
 			
@@ -164,7 +172,7 @@ main_jogada_inicial :-
 	mao_remover_peca(JI, [7|7]),
 	tabuleiro_jogar_peca([7|7], [6|6], [6|7]).
 			
-main_loop :- 	repeat,
+main_loop(Dificuldade) :- 	repeat,
 	cls,
 	mostra_tabuleiro(_).
 	%mostrar a mao do jogador de qum for a vez
@@ -196,7 +204,19 @@ baralho_get_peca_from(P) :- baralho(B),
 							random(0, LS, X),
 							list_element_at(P, B, X).
 
-baralho_dar_as_pecas :- 	
+baralho_reiniciar :-
+			baralho(B),
+			retract(baralho(B)),
+			assert(
+			baralho([ 
+				[0|0], [0|1], [0|2], [0|3], [0|4], [0|5], [0|6], [0|7], [1|1], [1|2], 
+				[1|3], [1|4], [1|5], [1|6], [1|7], [2|2], [2|3], [2|4], [2|5], [2|6],
+				[2|7], [3|3], [3|4], [3|5], [3|6], [3|7], [4|4], [4|5], [4|6], [4|7],
+				[5|5], [5|6], [5|7], [6|6], [6|7], [7|7] ])
+			).
+			
+							
+baralho_dar_as_pecas :-
 				repeat,
 				baralho(B),
 				baralho_get_peca_from(P),
@@ -239,3 +259,9 @@ matrix_setCellCol(N, [H|T], Piece, [H|T1]):-
 %%%%%%%%%%%%%%%%%%%%%%
 %% Outras funções	%%
 %%%%%%%%%%%%%%%%%%%%%%
+
+readInt(Texto, I, Min, Max) :-
+	repeat,
+	write(Texto), nl,
+	read(I),
+	I >= Min, I =< Max.
