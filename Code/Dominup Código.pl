@@ -63,9 +63,8 @@ jogadro_trocar_vez(J) :- jogador(X),
 
 tabuleiro_set(TI, [C|L], V, A, TF) :-
 	tabuleiro(TI),
-	matrix_setCell(L, C, TI, [V|A], TF),
-	retract(tabuleiro(TI)),
-	assert(tabuleiro(TF)).
+	matrix_setCell(L, C, TI, [V|A], TF).
+	
 	
 tabuleiro_get(T,[C|L], V, A) :- 
 	tabuleiro(T),
@@ -80,11 +79,18 @@ tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D) :-
 	Y is abs(DY),
 	D is X+Y.
 	
+tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]) :-
+	tabuleiro_get(_,[C1|L1], _, A1),
+	tabuleiro_get(_,[C2|L2], _, A2),
+	A1 == A2,
+	A is A1+1,
+	tabuleiro_set(TI, [C1|L1], V1, A, TF),
+	retract(tabuleiro(TI)),
+	assert(tabuleiro(TF)),
+	tabuleiro_set(TF, [C2|L2], V2, A, TFF),
+	retract(tabuleiro(TF)),
+	assert(tabuleiro(TFF)).
 
-%%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2])
-%%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2])
 	
 %%%!!!!!!!!!!!!!!!!!!!
 %tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
@@ -156,8 +162,7 @@ jogar :- 	baralho_dar_as_pecas,
 main_jogada_inicial :-
 	mao_quem_tem_peca([7|7], JI),
 	mao_remover_peca(JI, [7|7]),
-	tabuleiro_set(_, [6|6], 7, 1, _),
-	tabuleiro_set(_, [6|7], 7, 1, _).
+	tabuleiro_jogar_peca([7|7], [6|6], [6|7]).
 			
 main_loop :- 	repeat,
 	cls,

@@ -64,9 +64,9 @@ mostra_N_col(N,L) :-
 					write('  '),
 					mostra_N_col(NN, L).				
 				
-mostra_tabuleiro([L|R]) :-  tabuleiro([L|R]),
+mostra_tabuleiro(T) :-  	tabuleiro(T),
 							mostra_N_col(0, 12), nl,
-							mostra(1, [L|R]),
+							mostra(1, T),
 							nl.
 
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
