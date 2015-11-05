@@ -27,7 +27,7 @@ menu_principal :-
 	
 main_menu_opcoes(1) :-	jogar(0).
 main_menu_opcoes(2) :-	menu_dificuldade.
-main_menu_opcoes(3).
+main_menu_opcoes(3) :- 	menu_regras(1).
 main_menu_opcoes(4).	
 	
 	
@@ -42,7 +42,42 @@ menu_dificuldade :-
 	!,
 	jogar(I).
 
-
+menu_regras(1) :-
+	cls,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('    1                                   '), nl,
+	write(' 0-sair                 1-continuar     '), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	readInt('', I, 0, 1),
+	!,
+	menu_regras_aux(I, 1).
+menu_regras(2) :-
+	cls,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('   2                                    '), nl,
+	write(' 0-sair                 1-continuar     '), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	readInt('', I, 0, 1),
+	!,
+	menu_regras_aux(I, 2).
+menu_regras(3) :-
+	cls,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('    3                                   '), nl,
+	write(' 0-sair                 1-continuar     '), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	readInt('', I, 0, 1),
+	!,
+	menu_regras_aux(I, 3).
+	
+menu_regras(4) :-	
+	menu_principal.
+	
+menu_regras_aux(0, N) :-	menu_principal.
+menu_regras_aux(1, N) :- 	P is N+1,
+							menu_regras(P).
+	
+	
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
