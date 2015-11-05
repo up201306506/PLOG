@@ -69,6 +69,8 @@ tabuleiro_set(TI, [C|L], V, A, TF) :-
 	
 tabuleiro_get(T,[C|L], V, A) :- 
 	tabuleiro(T),
+	C > 0,
+	L > 0,
 	list_element_at(Y, T, L),
 	list_element_at([V|A], Y, C).
 	
@@ -92,9 +94,50 @@ tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]) :-
 	retract(tabuleiro(TF)),
 	assert(tabuleiro(TFF)).
 
-	
-%%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+
+tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) :-
+	tabuleiro(T),
+	%buscar os valores no tabuleiro
+		tabuleiro_get(T, [C1|L1], _, TA1),
+		tabuleiro_get(T, [C2|L2], _, TA2),
+		!,
+	%as coordenadas devem estar a tocar-se
+		tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D),
+		D == 1,
+	%as alturas devem ser iguais
+		TA1 == TA2,
+	%uma das peças circundantes devem ter o mesmo valor		
+		A is TA1 + 1,
+		(
+			expand_aux(V1, [C1|L1], A);
+			expand_aux(V2, [C2|L2], A)
+		).
+
+
+expand_aux(V, [C|L], A) :-
+	%à esquerda
+		C2 is C-1,
+		tabuleiro_get(_, [C2|L], V2, A2),
+		A == A2,
+		V == V2.
+expand_aux(V, [C|L], A) :-
+	%à direita
+		C2 is C+1,
+		tabuleiro_get(_, [C2|L], V2, A2),
+		A == A2,
+		V == V2.
+expand_aux(V, [C|L], A) :-
+	%abaixo
+		L2 is L+1,
+		tabuleiro_get(_, [C|L2], V2, A2),
+		A == A2,
+		V == V2.
+expand_aux(V, [C|L], A) :-
+	%acima
+		L2 is L-1,
+		tabuleiro_get(_, [C|L2], V2, A2),
+		A == A2,
+		V == V2.
 
 
 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]) :-
@@ -174,7 +217,8 @@ mao_reiniciar(J) :-
 
 dominup :- menu_principal.
 
-jogar(Dificuldade) :- 	
+jogar(Dificuldade) :- 
+	Dificuldade >= 0, Dificuldade < 3,
 	baralho_reiniciar,
 	mao_reiniciar(a),
 	mao_reiniciar(b),
@@ -185,15 +229,15 @@ jogar(Dificuldade) :-
 	main_jogada_inicial,
 	!,
 	main_loop(Dificuldade).
-
-
 			
 main_jogada_inicial :-
 	mao_quem_tem_peca([7|7], JI),
 	mao_remover_peca(JI, [7|7]),
 	tabuleiro_jogar_peca([7|7], [6|6], [6|7]).
 			
-main_loop(Dificuldade) :- 	repeat,
+main_loop(Dificuldade) :- 
+	Dificuldade >= 0, Dificuldade < 3,
+	repeat,
 	cls,
 	mostra_tabuleiro(_).
 	%mostrar a mao do jogador de qum for a vez
