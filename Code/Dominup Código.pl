@@ -71,10 +71,40 @@ tabuleiro_get(T,[C|L], V, A) :-
 	tabuleiro(T),
 	list_element_at(Y, T, L),
 	list_element_at([V|A], Y, C).
+	
+
+tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D) :-
+	DX is C1-C2,
+	X is abs(DX),
+	DY is L1-L2,
+	Y is abs(DY),
+	D is X+Y.
+	
 
 %%%!!!!!!!!!!!!!!!!!!!
-%tabuleiro_jogar_peca_climb(P, C1, C2)
-%tabuleiro_jogar_peca_expand(P, C1, C2)
+%tabuleiro_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2])
+%%%!!!!!!!!!!!!!!!!!!!
+%tabuleiro_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2])
+	
+%%%!!!!!!!!!!!!!!!!!!!
+%tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+
+
+tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]) :-
+	tabuleiro(T),
+	%buscar os valores no tabuleiro
+		tabuleiro_get(T, [C1|L1], TV1, TA1),
+		tabuleiro_get(T, [C2|L2], TV2, TA2),
+		!,
+	%as coordenadas devem estar a tocar-se
+		tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D),
+		D == 1,
+	%as alturas devem ser iguais
+		TA1 == TA2,
+	%os valores no tabuleiro devem ser iguais ao da peça
+		TV1 == V1,
+		TV2 == V2.
+	
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -198,3 +228,9 @@ matrix_setCellCol(1, [_|T], Piece, [Piece|T]).
 matrix_setCellCol(N, [H|T], Piece, [H|T1]):-
 	Prev is N-1,
 	matrix_setCellCol(Prev, T, Piece, T1).
+	
+
+	
+%%%%%%%%%%%%%%%%%%%%%%
+%% Outras funções	%%
+%%%%%%%%%%%%%%%%%%%%%%
