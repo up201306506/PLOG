@@ -81,10 +81,6 @@ tabuleiro_get(T,[C|L], V, A) :-
 %%	mao jogador		%%
 %%%%%%%%%%%%%%%%%%%%%%
 
-% V - Mao Velha
-% N - Mao Nova
-% J - Jogador
-% P - Peça
 mao_acrecentar_peca(P, J) :- 	mao(J, V),
 								append(P,V,N),
 								retract(mao(J,V)),
@@ -97,8 +93,10 @@ mao_remover_peca(J, P) :-
 	retract(mao(J,MV)),
 	assert(mao(J,MN)).
 						
-%%%!!!!!!!!!!!!!!!!!!!							
-%mao_escolher_peca(J, X) :-
+mao_escolher_peca(J, X, P) :-
+	jogador(J),
+	mao(J,M),
+	list_element_at(P, M, X).
 
 mao_vazia(J) :-
 	jogador(J),
@@ -132,13 +130,14 @@ main_jogada_inicial :-
 	tabuleiro_set(_, [6|7], 7, 1, _).
 			
 main_loop :- 	repeat,
-			mostra_tabuleiro(_).
-			%mostrar a mao do jogador de qum for a vez
-			%pedir qual a peca que joga-a
-			%pedir as coordenadas
-			%verificar se e valido
-			%alterar tabuleiro e a vez do jogador
-			%verificar se o jogo acabou
+	cls,
+	mostra_tabuleiro(_).
+	%mostrar a mao do jogador de qum for a vez
+	%pedir qual a peca que joga-a
+	%pedir as coordenadas
+	%verificar se e valido
+	%alterar tabuleiro e a vez do jogador
+	%verificar se o jogo acabou
 			
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -180,11 +179,14 @@ baralho_dar_as_pecas :-
 %%%%%%%%%%%%%%%%%%%%%%
 				
 list_element_at(X,[X|_],1).
-list_element_at(X,[_|L],K) :- list_element_at(X,L,K1), K is K1 + 1.
+list_element_at(X,[_|L],K) :- 
+	list_element_at(X,L,K1), 
+	K is K1 + 1.
 			
 
-list_delete_one(X,L1,L2) :- 	append(A1,[X|A2],L1),
-						append(A1,A2,L2).
+list_delete_one(X,L1,L2) :- 	
+	append(A1,[X|A2],L1),
+	append(A1,A2,L2).
 
 matrix_setCell(1, Col, [H|T], Piece, [H1|T]) :-
 	matrix_setCellCol(Col,H,Piece,H1).
