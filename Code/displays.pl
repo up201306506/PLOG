@@ -4,6 +4,45 @@
 
 cls :- write('\e[2J').
 
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Menu 			%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+menu_principal :-
+	cls,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('++                                    ++'), nl,
+	write('++           D O M I N U P            ++'), nl,
+	write('++                                    ++'), nl,
+	write('++ ---------------------------------- ++'), nl,
+	write('++            1 - Jogar               ++'), nl,
+	write('++            2 - Jogar CPU           ++'), nl,
+	write('++            3 - Regras              ++'), nl,
+	write('++            4 - Sair                ++'), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	readInt('Escrever a opção seguida de um ponto', I, 1, 4),
+	!,
+	main_menu_opcoes(I).
+	
+main_menu_opcoes(1) :-	jogar(0).
+main_menu_opcoes(2) :-	menu_dificuldade.
+main_menu_opcoes(3).
+main_menu_opcoes(4).	
+	
+	
+menu_dificuldade :-
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('++   Dificuldade?                     ++'), nl,
+	write('++ ---------------------------------- ++'), nl,
+	write('++  1 - Fácil                         ++'), nl,
+	write('++  2 - Dificil                       ++'), nl,
+	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	read(I), I < 3, I > 0,
+	!,
+	jogar(I).
+
+
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -100,39 +139,3 @@ mostra_mao_jogador(J) :-
 	nl.
 	
 	
-%%%%%%%%%%%%%%%%%%%%%%
-%%	Menu 			%%
-%%%%%%%%%%%%%%%%%%%%%%
-
-menu_principal :-
-	cls,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	write('++                                    ++'), nl,
-	write('++           D O M I N U P            ++'), nl,
-	write('++                                    ++'), nl,
-	write('++ ---------------------------------- ++'), nl,
-	write('++            1 - Jogar               ++'), nl,
-	write('++            2 - Jogar CPU           ++'), nl,
-	write('++            3 - Regras              ++'), nl,
-	write('++            4 - Sair                ++'), nl,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	readInt('Escrever a opção seguida de um ponto', I, 1, 4),
-	!,
-	main_menu_opcoes(I).
-	
-main_menu_opcoes(1) :-	jogar(0).
-main_menu_opcoes(2) :-	menu_dificuldade.
-main_menu_opcoes(3).
-main_menu_opcoes(4).	
-	
-	
-menu_dificuldade :-
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	write('++   Dificuldade?                     ++'), nl,
-	write('++ ---------------------------------- ++'), nl,
-	write('++  1 - Fácil                         ++'), nl,
-	write('++  2 - Dificil                       ++'), nl,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	read(I), I < 3, I > 0,
-	!,
-	jogar(I).
