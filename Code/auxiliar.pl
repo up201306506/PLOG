@@ -27,6 +27,24 @@ tabuleiro_linha_vazia([H|T]) :-
 	tabuleiro_primeiro_elemento_vazio([H|T]),
 	tabuleiro_linha_vazia(T).
 
+tabuleiro_primeira_coluna_vazia(N, _, Max) :-
+	N > Max.
+tabuleiro_primeira_coluna_vazia(N, T, Max) :-
+	list_element_at(L, T, N),
+	!,
+	tabuleiro_primeiro_elemento_vazio(L),
+	N1 is N+1,
+	tabuleiro_primeira_coluna_vazia(N1, T, Max).
+
+tabuleiro_ultima_coluna_vazia(N, _, Max) :-
+	N > Max.
+tabuleiro_ultima_coluna_vazia(N, T, Max) :-
+	list_element_at(L, T, N),
+	!,
+	tabuleiro_ultimo_elemento_vazio(L),
+	N1 is N+1,
+	tabuleiro_ultima_coluna_vazia(N1, T, Max).
+
 tabuleiro_primeiro_elemento_vazio([[_|A]|_]) :-
 	A == 0.
 
@@ -119,4 +137,3 @@ num_crescente(P, N, _) :-
 num_crescente(P, N, Max) :-
 	R is P+1,
 	num_crescente(R, N, Max).
-	
