@@ -199,7 +199,7 @@ mostra_mao_cabecalho(L):-
 	!,
 	num_crescente(1, N, L),
 	mostra_mao_cabecalho_aux(N),
-	N==L.
+	N>=L.
 mostra_mao_cabecalho_aux(N) :- N < 10, write(' '),write(N),write(' +').
 mostra_mao_cabecalho_aux(N) :- N >= 10, write(' '),write(N),write('+').
 	
@@ -208,7 +208,7 @@ mostra_mao_separador(L):-
 	!,
 	num_crescente(1, N, L),
 	write('---+'),
-	N==L.
+	N>=L.
 
 
 mostra_mao_jogador(J) :- 
