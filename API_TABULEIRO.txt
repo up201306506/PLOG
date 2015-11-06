@@ -1,0 +1,11 @@
+tabuleiro_dimensiona
+
+tabuleiro_primeira_coluna_vazia(N, T, Max)
+tabuleiro_ultima_coluna_vazia(N, T, Max)
+tabuleiro_primeira_linha_vazia
+tabuleiro_ultima_linha_vazia
+
+tabuleiro_insere_linha_fim 
+tabuleiro_insere_linha_inicio
+tabuleiro_insere_coluna_fim
+tabuleiro_insere_coluna_inicio
