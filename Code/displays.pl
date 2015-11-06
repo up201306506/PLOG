@@ -171,16 +171,38 @@ exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L)
 %%	Mãos 			%%
 %%%%%%%%%%%%%%%%%%%%%%
 
+%+ # + # + # +
+%+---+---+---+
+%| V | V | V |
+%+---+---+---+
+%| V | V | V |
+%+---+---+---+
 
-mostra_mao_peca([V|H]) :- write('['),
-						write(V),
-						write('|'),
-						write(H),
-						write(']').
-mostra_mao_linha([]).
-mostra_mao_linha([P|[]]) :- mostra_mao_peca(P).
-mostra_mao_linha([P|R]) :- mostra_mao_peca(P),
-					mostra_mao_linha(R).
+mostra_mao_linha_V1([]).					
+mostra_mao_linha_V1([ [V1|_] |R]) :-
+	write(' '), write(V1), write(' |'),
+	mostra_mao_linha_V1(R).
+	
+mostra_mao_linha_V2([]).					
+mostra_mao_linha_V2([ [_|V2] |R]) :-
+	write(' '), write(V2), write(' |'),
+	mostra_mao_linha_V2(R).
+				
+mostra_mao_cabecalho(L):-
+	write('+'),
+	!,
+	num_crescente(1, N, L),
+	mostra_mao_cabecalho_aux(N),
+	N==L.
+mostra_mao_cabecalho_aux(N) :- N < 10, write(' '),write(N),write(' +').
+mostra_mao_cabecalho_aux(N) :- N >= 10, write(' '),write(N),write('+').
+	
+mostra_mao_separador(L):-
+	write('+'),
+	!,
+	num_crescente(1, N, L),
+	write('---+'),
+	N==L.
 
 
 mostra_mao_jogador(J) :- 
@@ -190,5 +212,10 @@ mostra_mao_jogador(J) :-
 	write(J),
 	write(':'), 
 	nl, 
-	mostra_mao_linha(M),
-	nl.
+	length(M, L),
+	mostra_mao_cabecalho(L),nl,
+	mostra_mao_separador(L),nl,
+	write('|'), mostra_mao_linha_V1(M), nl,
+	mostra_mao_separador(L),nl,
+	write('|'), mostra_mao_linha_V2(M), nl,
+	mostra_mao_separador(L),nl.
