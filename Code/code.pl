@@ -104,6 +104,14 @@ jogador_jogadas_disponiveis_climb_aux_colunas(L, M) :-
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
 
+tabuleiro_primeiro_elemento_vazio([[_|A]|_]) :-
+	A == 0.
+
+tabuleito_ultimo_elemento_vazio(L) :-
+	reverse(L, NL),
+	tabuleiro_primeiro_elemento_vazio(NL).
+
+
 tabuleiro_set(TI, [C|L], V, A, TF) :-
 	tabuleiro(TI),
 	matrix_setCell(L, C, TI, [V|A], TF).
