@@ -95,12 +95,17 @@ mostra_peca([V|H]) :- write('  '),
 						write('|').
 						
 mostra_linha([]).
-mostra_linha([P|[]]) :- mostra_peca(P).
-mostra_linha([P|R]) :- mostra_peca(P),
+mostra_linha([P|[]]) :- 
+						P \= [],
+						mostra_peca(P).
+mostra_linha([P|R]) :- 
+					P \= [],
+					mostra_peca(P),
 					mostra_linha(R).
 
 mostra(_, [], LL) :- mostra_separador(0,LL).
-mostra(N, [L|R], LL) :- NN is N+1,
+mostra(N, [L|R], LL) :- 
+					NN is N+1,
 					N >= 10,
 					mostra_separador(0,LL),
 					write(N), write('|'),
@@ -126,6 +131,7 @@ mostra_separador(N,L):-
 	write('--+-'),
 	mostra_separador(NN, L).
 mostra_separador(N,L):-
+	N =< L,
 	NN is N + 1,
 	write('----+-+-'),
 	mostra_separador(NN, L).

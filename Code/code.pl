@@ -1,10 +1,11 @@
 
 :- use_module(library(random)).
 :- use_module(library(lists)).
+:- use_module(library(system)).
 :- use_module(displays).
 :- use_module(auxiliar).
 
-%% :-setrand(888).
+%:-now(time), setrand(time).
 
 
 
@@ -148,40 +149,36 @@ tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) :-
 		D == 1,
 	%as alturas devem ser iguais
 		TA1 == TA2,
-	%as alturas têm de ser diferentes de 0
-		TA1 \= 0,
 	%uma das peças circundantes devem ter o mesmo valor		
 		A is TA1 + 1,
 		(
 			expand_aux(V1, [C1|L1], A);
 			expand_aux(V2, [C2|L2], A)
 		).
-
-
-expand_aux(V, [C|L], A) :-
-	%à esquerda
-		C2 is C-1,
-		tabuleiro_get(_, [C2|L], V2, A2),
-		A == A2,
-		V == V2.
-expand_aux(V, [C|L], A) :-
-	%à direita
-		C2 is C+1,
-		tabuleiro_get(_, [C2|L], V2, A2),
-		A == A2,
-		V == V2.
-expand_aux(V, [C|L], A) :-
-	%abaixo
-		L2 is L+1,
-		tabuleiro_get(_, [C|L2], V2, A2),
-		A == A2,
-		V == V2.
-expand_aux(V, [C|L], A) :-
-	%acima
-		L2 is L-1,
-		tabuleiro_get(_, [C|L2], V2, A2),
-		A == A2,
-		V == V2.
+			expand_aux(V, [C|L], A) :-
+				%à esquerda
+					C2 is C-1,
+					tabuleiro_get(_, [C2|L], V2, A2),
+					A == A2,
+					V == V2.
+			expand_aux(V, [C|L], A) :-
+				%à direita
+					C2 is C+1,
+					tabuleiro_get(_, [C2|L], V2, A2),
+					A == A2,
+					V == V2.
+			expand_aux(V, [C|L], A) :-
+				%abaixo
+					L2 is L+1,
+					tabuleiro_get(_, [C|L2], V2, A2),
+					A == A2,
+					V == V2.
+			expand_aux(V, [C|L], A) :-
+				%acima
+					L2 is L-1,
+					tabuleiro_get(_, [C|L2], V2, A2),
+					A == A2,
+					V == V2.
 
 
 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]) :-
@@ -281,17 +278,57 @@ main_jogada_inicial :-
 	mao_remover_peca(JI, [7|7]),
 	tabuleiro_jogar_peca([7|7], [6|6], [6|7]).
 			
-main_loop(Dificuldade) :- 
-	Dificuldade >= 0, Dificuldade < 3,
+main_loop(0) :- 
+		repeat,
+	%Escolher a Peca
+		cls,
+		mostra_tabuleiro(_),
+		jogador_escolhido(J),
+		mostra_mao_jogador(J),
+			mao(J,M), length(M, ML),
+		readInt_NoRepeat('Qual a peca que quer jogar?', Input, 1, ML),
+	%Escolher a Posição da cabeça
+		cls,
+		mostra_tabuleiro(_),
+		mao_escolher_peca(J, Input, [V1|V2]),
+		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cabeca: '), write(V1) , nl,
+			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
+		write('Quais as coordenadas da cabeca da peca que quer jogar?'), nl,
+		readInt_NoRepeat('Linha?', L1, 1, NL),
+		readInt_NoRepeat('Coluna?', C1, 1, NC),
+		
+	%Escolher a Posição da cauda
+		cls,
+		mostra_tabuleiro(_),
+		mao_escolher_peca(J, Input, [V1|V2]),
+		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cauda: '), write(V2) , nl,
+			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
+		write('Quais as coordenadas da cauda da peca que quer jogar?'), nl,
+		readInt_NoRepeat('Linha?', L2, 1, NL),
+		readInt_NoRepeat('Coluna?', C2, 1, NC),
+	%Verificar se e valido
+		write('Verificar'), nl, sleep(1),
+		(
+		tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
+		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) 
+		),
+		write('Passou, vai jogar'), nl, sleep(1),
+	%alterar tabuleiro e a vez do jogador
+		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
+		jogador_trocar_vez(J),
+	%expandir o tabuleiro se necessário
+	
+	%verificar se o jogo acabou
+		!, main_loop(0).
+
+main_loop(1) :-
 	repeat,
 	cls,
 	mostra_tabuleiro(_).
-	%mostrar a mao do jogador de qum for a vez
-	%pedir qual a peca que joga-a
-	%pedir as coordenadas
-	%verificar se e valido
-	%alterar tabuleiro e a vez do jogador
-	%verificar se o jogo acabou
+main_loop(2) :-
+	repeat,
+	cls,
+	mostra_tabuleiro(_).
 			
 
 %%%%%%%%%%%%%%%%%%%%%%
