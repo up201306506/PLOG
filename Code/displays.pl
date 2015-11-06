@@ -101,28 +101,21 @@ mostra_linha([P|[]]) :- mostra_peca(P).
 mostra_linha([P|R]) :- mostra_peca(P),
 					mostra_linha(R).
 
-mostra(N, [L|[]]) :- 
-					length(L,LL),
-					mostra_separador(0,LL),
-					write(N), write('|'), mostra_linha(L), nl,
-					mostra_separador(0,LL).
-					
-mostra(N, [L|R]) :- NN is N+1,
+mostra(N, [], LL) :- mostra_separador(0,LL).
+mostra(N, [L|R], LL) :- NN is N+1,
 					N >= 10,
-					length(L,LL),
 					mostra_separador(0,LL),
 					write(N), write('|'),
 					mostra_linha(L),
 					nl,
-					mostra(NN, R).
-mostra(N, [L|R]) :- NN is N+1,
+					mostra(NN, R, LL).
+mostra(N, [L|R], LL) :- NN is N+1,
 					N < 10,
-					length(L,LL),
 					mostra_separador(0,LL),
 					write(N), write(' |'),
 					mostra_linha(L),
 					nl,
-					mostra(NN, R).
+					mostra(NN, R, LL).
 
 mostra_separador(N,L):-
 	N > L,
@@ -170,7 +163,7 @@ mostra_tabuleiro([L|R]) :-
 		tabuleiro([L|R]),
 		length(L,N),
 		mostra_N_col(0, N), nl,
-		mostra(1, [L|R]),
+		mostra(1, [L|R], N),
 		nl.
 
 %%%%%%Exemplo - comando |?- exemplo_mostra_tab. em Prolog
