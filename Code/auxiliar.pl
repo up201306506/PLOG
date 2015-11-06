@@ -22,9 +22,47 @@ matrix_setCellCol(1, [_|T], Piece, [Piece|T]).
 matrix_setCellCol(N, [H|T], Piece, [H|T1]):-
 	Prev is N-1,
 	matrix_setCellCol(Prev, T, Piece, T1).
-	
 
-	
+tabuleiro_linha_vazia([]).
+tabuleiro_linha_vazia([H|T]) :-
+	tabuleiro_primeiro_elemento_vazio([H|T]),
+	tabuleiro_linha_vazia(T).
+
+tabuleiro_primeiro_elemento_vazio([[_|A]|_]) :-
+	A == 0.
+
+tabuleiro_ultimo_elemento_vazio(L) :-
+	reverse(L, NL),
+	tabuleiro_primeiro_elemento_vazio(NL).
+
+tabuleiro_insere_linha_fim :-
+	tabuleiro(T),
+	list_element_at(PL, T, 1),
+	length(PL,C),
+	acrescenta_vazio([], C, LF),
+	!,
+	append(T, [LF], TF),
+	retract(tabuleiro(T)),
+	assert(tabuleiro(TF)).
+
+tabuleiro_insere_linha_inicio :-
+	tabuleiro(T),
+	list_element_at(PL, T, 1),
+	length(PL,C),
+	acrescenta_vazio([], C, LF),
+	!,
+	append([LF], T, TF),
+	retract(tabuleiro(T)),
+	assert(tabuleiro(TF)).
+
+acrescenta_vazio(L, 1, LF) :-
+	append([[0|0]], L, LF).
+
+acrescenta_vazio(L, N, LF) :-
+	append([[0|0]], L, LI),
+	N1 is N-1,
+	acrescenta_vazio(LI, N1, LF).
+
 %%%%%%%%%%%%%%%%%%%%%%
 %% Outras funções	%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -43,4 +81,4 @@ num_crescente(P, N, _) :-
 num_crescente(P, N, Max) :-
 	R is P+1,
 	num_crescente(R, N, Max).
-		
+	
