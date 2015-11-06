@@ -107,7 +107,7 @@ jogador_jogadas_disponiveis_climb_aux_colunas(L, M) :-
 tabuleiro_primeiro_elemento_vazio([[_|A]|_]) :-
 	A == 0.
 
-tabuleito_ultimo_elemento_vazio(L) :-
+tabuleiro_ultimo_elemento_vazio(L) :-
 	reverse(L, NL),
 	tabuleiro_primeiro_elemento_vazio(NL).
 
