@@ -41,13 +41,17 @@ menu_dificuldade :-
 	read(I), I < 3, I > 0,
 	!,
 	jogar(I).
-
+	
 menu_regras(1) :-
 	cls,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	write('    1                                   '), nl,
+	write('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'), nl,
+	write(' O Dominup é uma variante do jogo do Dominó, pelo que tem grandes semelhanças no modo como é jogado'), nl,
+	nl,
+	write(' As duas principais diferenças nesta versão do jogo são:'), nl,
+	write('     * Tem maior numero de peças '), nl,
+	write('                                       '), nl,
 	write(' 0-sair                 1-continuar     '), nl,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
+	write('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'), nl,
 	readInt('', I, 0, 1),
 	!,
 	menu_regras_aux(I, 1).
@@ -73,7 +77,7 @@ menu_regras(3) :-
 menu_regras(4) :-	
 	menu_principal.
 	
-menu_regras_aux(0, N) :-	menu_principal.
+menu_regras_aux(0, _) :-	menu_principal.
 menu_regras_aux(1, N) :- 	P is N+1,
 							menu_regras(P).
 	
@@ -81,13 +85,7 @@ menu_regras_aux(1, N) :- 	P is N+1,
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
-				
-%-+  C  +-+  C  +-+ 
-%-+-----+-+-----+-+-
-%L|  #  |A|  #  |A| 
-%-+-----+-+--+--+-+-
-%L|  #  |A|  #  |A| 
-%-+-----+-+-----+-+-
+
 
 mostra_peca([_|0]) :- write('     | |').
 mostra_peca([V|H]) :- write('  '),
@@ -101,7 +99,7 @@ mostra_linha([P|[]]) :- mostra_peca(P).
 mostra_linha([P|R]) :- mostra_peca(P),
 					mostra_linha(R).
 
-mostra(N, [], LL) :- mostra_separador(0,LL).
+mostra(_, [], LL) :- mostra_separador(0,LL).
 mostra(N, [L|R], LL) :- NN is N+1,
 					N >= 10,
 					mostra_separador(0,LL),

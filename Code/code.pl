@@ -1,5 +1,6 @@
-﻿
+
 :- use_module(library(random)).
+:- use_module(library(lists)).
 :- use_module(displays).
 :- use_module(auxiliar).
 
@@ -45,17 +46,58 @@ estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
 %%	Jogador			%%
 %%%%%%%%%%%%%%%%%%%%%%
 
-jogadro_trocar_vez(J) :- jogador(X),
+jogador_trocar_vez(J) :- jogador(X),
 						X \= J,
 						retract(jogador_escolhido(J)),
 						assert(jogador_escolhido(X)).
 
-%%%!!!!!!!!!!!!!!!!!!!
-%jogador_jogadas_disponiveis_climb(J, P, C1, C2)
-%jogador_jogadas_disponiveis_expand(J, P, C1, C2)
+
+jogador_jogadas_disponiveis_climb(J) :-
+	jogador(J),
+    mao(J, M),
+	length(M, L),
+	( 
+		jogador_jogadas_disponiveis_climb_aux_linhas(L,M);
+		jogador_jogadas_disponiveis_climb_aux_colunas(L,M)
+	).
+
+jogador_jogadas_disponiveis_climb_aux_linhas(L, M) :- 
+	tabuleiro([Z|X]),
+	length(Z, NC),
+	length([Z|X], NL),
+	NLL is NL-1,
+	!,
+	num_crescente(1, N, L),
+	list_element_at([V1|V2], M, N),
+	write([V1|V2]), nl,
+	num_crescente(1, L1, NLL),
+	L2 is L1+1,
+	num_crescente(1, C1, NC),
+	C2 is C1,
+	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]),
+	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2]).
+
+jogador_jogadas_disponiveis_climb_aux_colunas(L, M) :- 
+	tabuleiro([Z|X]),
+	length(Z, NC),
+	length([Z|X], NL),
+	NCC is NC-1,
+	!,
+	num_crescente(1, N, L),
+	list_element_at([V1|V2], M, N),
+	write([V1|V2]), nl,
+	num_crescente(1, L1, NL),
+	L2 is L1,
+	num_crescente(1, C1, NCC),
+	C2 is C1+1,
+	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]),
+	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2]).
+
+
+
+%jogador_jogadas_disponiveis_expand(J)
 
 %jogador_pode_jogar(T, J)
-
 						
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +148,8 @@ tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) :-
 		D == 1,
 	%as alturas devem ser iguais
 		TA1 == TA2,
+	%as alturas têm de ser diferentes de 0
+		TA1 \= 0,
 	%uma das peças circundantes devem ter o mesmo valor		
 		A is TA1 + 1,
 		(
@@ -151,6 +195,8 @@ tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]) :-
 		D == 1,
 	%as alturas devem ser iguais
 		TA1 == TA2,
+	%a altura não pode ser 0
+		TA1 \= 0,
 	%os valores no tabuleiro devem ser iguais ao da peça
 		TV1 == V1,
 		TV2 == V2.
@@ -177,7 +223,7 @@ tabuleiro_reiniciar :-
 %%	mao jogador		%%
 %%%%%%%%%%%%%%%%%%%%%%
 
-mao_acrecentar_peca(P, J) :- 	mao(J, V),
+mao_acrescentar_peca(P, J) :- 	mao(J, V),
 								append(P,V,N),
 								retract(mao(J,V)),
 								assert(mao(J, N)).
@@ -289,7 +335,7 @@ baralho_dar_as_pecas :-
 				retract(baralho(B)),
 				assert(baralho(C)),
 				jogador_escolhido(J),
-				mao_acrecentar_peca([P],J),
-				jogadro_trocar_vez(J),
+				mao_acrescentar_peca([P],J),
+				jogador_trocar_vez(J),
 				baralho(Y),
-				length(Y, 0).		
+				length(Y, 0).
