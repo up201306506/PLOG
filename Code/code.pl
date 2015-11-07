@@ -32,7 +32,7 @@ mao(jogador2, []).
 
 :- dynamic jogador_escolhido/1.
 jogador_escolhido(jogador1).
-
+	
 :- dynamic estado/1.
 estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
 
@@ -306,9 +306,10 @@ jogar(Dificuldade) :-
 main_jogada_inicial :-
 	mao_quem_tem_peca([7|7], JI),
 	mao_remover_peca(JI, [7|7]),
-	tabuleiro_jogar_peca([7|7], [3|3], [3|4]).
+	tabuleiro_jogar_peca([7|7], [3|3], [3|4]),
+	jogador_escolhido(J),
+	(JI = J -> jogador_trocar_vez(J); true).
 	
-			
 main_loop(0) :- 
 		jogador_escolhido(J),
 		main_jogador_humano(J),
@@ -362,7 +363,7 @@ main_jogador_humano(J) :-
 		tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
 		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) 
 		),
-		write('A jogada passou'), nl, sleep(1),
+		write('A jogada e valida e foi efectuada'), nl, sleep(1),
 	%alterar tabuleiro, tirar a peça ao jogador
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
 		mao_remover_peca(J, [V1|V2]),
