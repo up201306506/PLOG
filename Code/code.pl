@@ -46,6 +46,12 @@ jogador_trocar_vez(J) :- jogador(X),
 						retract(jogador_escolhido(J)),
 						assert(jogador_escolhido(X)).
 
+jogador_pode_jogar(J) :-
+	(
+	jogador_jogadas_disponiveis_climb(J);
+	jogador_jogadas_disponiveis_expand(J)
+	).
+						
 
 jogador_jogadas_disponiveis_climb(J) :-
 	jogador(J),
@@ -61,38 +67,84 @@ jogador_jogadas_disponiveis_climb_aux_linhas(L, M) :-
 	length(Z, NC),
 	length([Z|X], NL),
 	NLL is NL-1,
+	write('CLIMB LINHAS'),nl,
 	!,
-	num_crescente(1, N, L),
+	incrementador(1, N, L),
 	list_element_at([V1|V2], M, N),
 	write([V1|V2]), nl,
-	num_crescente(1, L1, NLL),
+	incrementador(1, L1, NLL),
 	L2 is L1+1,
-	num_crescente(1, C1, NC),
+	incrementador(1, C1, NC),
 	C2 is C1,
-	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]),
-	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2]).
+	(tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
+	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2])).
 
 jogador_jogadas_disponiveis_climb_aux_colunas(L, M) :- 
 	tabuleiro([Z|X]),
 	length(Z, NC),
 	length([Z|X], NL),
 	NCC is NC-1,
+	write('CLIMB COLUNAS'),nl,
+	write('NL:'),write(NL),write(','),write('NC:'),write(NC),write(','),nl,
 	!,
-	num_crescente(1, N, L),
+	incrementador(1, N, L),
 	list_element_at([V1|V2], M, N),
 	write([V1|V2]), nl,
-	num_crescente(1, L1, NL),
+	incrementador(1, L1, NL),
 	L2 is L1,
-	num_crescente(1, C1, NCC),
+	incrementador(1, C1, NCC),
 	C2 is C1+1,
-	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]),
-	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2]).
+	(tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
+	tabuleiro_pode_jogar_peca_climb([V2|V1], [C1|L1], [C2|L2])).
 
 
 
-%jogador_jogadas_disponiveis_expand(J)
-
-%jogador_pode_jogar(T, J)
+jogador_jogadas_disponiveis_expand(J) :-
+	jogador(J),
+    mao(J, M),
+	length(M, L),
+	( 
+		jogador_jogadas_disponiveis_expand_aux_linhas(L,M);
+		jogador_jogadas_disponiveis_expand_aux_colunas(L,M)
+	).
+	
+jogador_jogadas_disponiveis_expand_aux_linhas(L, M) :- 
+	tabuleiro([Z|X]),
+	length(Z, NC),
+	length([Z|X], NL),
+	NLL is NL-1,
+	write('EXPAND LINHAS'),nl,
+	write('NL:'),write(NL),write(','),write('NC:'),write(NC),write(','),nl,
+	!,
+	incrementador(1, N, L),
+	list_element_at([V1|V2], M, N),
+	write([V1|V2]), nl,
+	incrementador(1, L1, NLL),
+	L2 is L1+1,
+	incrementador(1, C1, NC),
+	C2 is C1,
+	write(C1),write(','),write(L1),write(','),write(C2),write(','),write(L2),write(','),nl,
+	(tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]);
+	tabuleiro_pode_jogar_peca_expand([V2|V1], [C1|L1], [C2|L2])).
+	
+jogador_jogadas_disponiveis_expand_aux_colunas(L, M) :- 
+	tabuleiro([Z|X]),
+	length(Z, NC),
+	length([Z|X], NL),
+	NCC is NC-1,
+	write('EXPAND COLUNAS'),nl,
+	write('NL:'),write(NL),write(','),write('NC:'),write(NC),write(','),nl,
+	!,
+	incrementador(1, N, L),
+	list_element_at([V1|V2], M, N),
+	write([V1|V2]), nl,
+	incrementador(1, L1, NL),
+	L2 is L1,
+	incrementador(1, C1, NCC),
+	C2 is C1+1,
+	write(C1),write(','),write(L1),write(','),write(C2),write(','),write(L2),write(','),nl,
+	(tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]);
+	tabuleiro_pode_jogar_peca_expand([V2|V1], [C1|L1], [C2|L2])).
 						
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -130,7 +182,7 @@ tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]) :-
 	tabuleiro_set(TF, [C2|L2], V2, A, TFF),
 	retract(tabuleiro(TF)),
 	assert(tabuleiro(TFF)).
-
+	
 
 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) :-
 	tabuleiro(T),
@@ -271,14 +323,36 @@ main_jogada_inicial :-
 	
 			
 main_loop(0) :- 
+		jogador_escolhido(J),
+		main_jogador_humano(J),
+		!,
+		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
+
+main_loop(1) :-
+	repeat,
+	cls,
+	mostra_tabuleiro(_).
+main_loop(2) :-
+	repeat,
+	cls,
+	mostra_tabuleiro(_).
+	
+main_victoria(J) :-
+	cls,
+	nl,nl,nl,
+	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
+	write('tabuleiro final:'), nl,
+	mostra_tabuleiro(_).
+	
+main_jogador_humano(J) :-
 	%Escolher a Peca
 		cls,
 		mostra_tabuleiro(_),
-		jogador_escolhido(J),
 		mostra_mao_jogador(J),
 			mao(J,M), length(M, ML),
 		readInt('Qual a peca que quer jogar?', Input, 1, ML),
 	%Escolher a Posição da cabeça
+		!,
 		cls,
 		mostra_tabuleiro(_),
 		mao_escolher_peca(J, Input, [V1|V2]),
@@ -306,28 +380,11 @@ main_loop(0) :-
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
 		mao_remover_peca(J, [V1|V2]),
 	%Ver se o outro jogador pode jogar, trocar a vez se sim
-		jogador_trocar_vez(J),	
-	%expandir o tabuleiro se necessário
-		tabuleiro_dimensiona, tabuleiro_dimensiona,
-	%Verificar se o jogo acabou
 		!,
-		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
-
-main_loop(1) :-
-	repeat,
-	cls,
-	mostra_tabuleiro(_).
-main_loop(2) :-
-	repeat,
-	cls,
-	mostra_tabuleiro(_).
-	
-main_victoria(J) :-
-	cls,
-	nl,nl,nl,
-	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
-	write('tabuleiro final:'), nl,
-	mostra_tabuleiro(_).
+		jogador(Joutro), Joutro \= J,
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J)),	
+	%expandir o tabuleiro se necessário
+		tabuleiro_dimensiona, tabuleiro_dimensiona.
 			
 
 %%%%%%%%%%%%%%%%%%%%%%

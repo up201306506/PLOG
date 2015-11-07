@@ -158,3 +158,12 @@ num_crescente(P, N, _) :-
 num_crescente(P, N, Max) :-
 	R is P+1,
 	num_crescente(R, N, Max).
+	
+
+incrementador(P, N, Max) :-
+	P =< Max,
+	N is P.
+incrementador(P, N, Max) :-
+	P =< Max,
+	R is P+1,
+	incrementador(R, N, Max).
