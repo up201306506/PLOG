@@ -14,8 +14,8 @@
 %%%%%%%%%%%%%%%%%%%%%%
 
 
-jogador(a).
-jogador(b).
+jogador(jogador1).
+jogador(jogador2).
 
 :- dynamic tabuleiro/1.
 tabuleiro([ [[0|0],[0|0],[0|0],[0|0],[0|0]],
@@ -27,11 +27,11 @@ tabuleiro([ [[0|0],[0|0],[0|0],[0|0],[0|0]],
 			
 
 :- dynamic mao/2.			
-mao(a, []).
-mao(b, []).
+mao(jogador1, []).
+mao(jogador2, []).
 
 :- dynamic jogador_escolhido/1.
-jogador_escolhido(a).
+jogador_escolhido(jogador1).
 
 :- dynamic estado/1.
 estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
@@ -253,8 +253,8 @@ dominup :- menu_principal.
 jogar(Dificuldade) :- 
 	Dificuldade >= 0, Dificuldade < 3,
 	baralho_reiniciar,
-	mao_reiniciar(a),
-	mao_reiniciar(b),
+	mao_reiniciar(jogador1),
+	mao_reiniciar(jogador2),
 	tabuleiro_reiniciar,
 	baralho_dar_as_pecas,
 	mostra_tabuleiro(_),
@@ -271,9 +271,6 @@ main_jogada_inicial :-
 	
 			
 main_loop(0) :- 
-	%Verificar se o jogo acabou
-		
-
 	%Escolher a Peca
 		cls,
 		mostra_tabuleiro(_),
@@ -299,19 +296,22 @@ main_loop(0) :-
 	%Verificar se e valido
 		!,
 		cls,
-		write('Verificar'), nl, sleep(1),
+		write('A verificar se a jogada e valida...'), nl, sleep(1),
 		(
 		tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
 		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) 
 		),
-		write('Passou, vai jogar'), nl, sleep(1),
+		write('A jogada passou'), nl, sleep(1),
 	%alterar tabuleiro, tirar a peça ao jogador
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
 		mao_remover_peca(J, [V1|V2]),
 	%Ver se o outro jogador pode jogar, trocar a vez se sim
 		jogador_trocar_vez(J),	
 	%expandir o tabuleiro se necessário
-		!, main_loop(0).
+		tabuleiro_dimensiona, tabuleiro_dimensiona,
+	%Verificar se o jogo acabou
+		!,
+		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
 
 main_loop(1) :-
 	repeat,
@@ -320,6 +320,13 @@ main_loop(1) :-
 main_loop(2) :-
 	repeat,
 	cls,
+	mostra_tabuleiro(_).
+	
+main_victoria(J) :-
+	cls,
+	nl,nl,nl,
+	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
+	write('tabuleiro final:'), nl,
 	mostra_tabuleiro(_).
 			
 

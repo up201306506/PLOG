@@ -25,11 +25,12 @@ matrix_setCellCol(N, [H|T], Piece, [H|T1]):-
 tabuleiro_dimensiona :-
 	tabuleiro(T),
 	length(T, N),
-	write('Entrei aqui'), nl,
-		\+ tabuleiro_primeira_coluna_vazia(1, T, N) -> tabuleiro_insere_coluna_inicio);
-		\+ tabuleiro_ultima_coluna_vazia(1, T, N) -> tabuleiro_insere_coluna_fim;
-		\+ tabuleiro_primeira_linha_vazia -> tabuleiro_insere_linha_inicio;
-		\+ tabuleiro_ultima_linha_vazia -> tabuleiro_insere_linha_fim.
+	repeat,
+		(\+tabuleiro_primeira_coluna_vazia(1, T, N) -> tabuleiro_insere_coluna_inicio;
+		\+tabuleiro_ultima_coluna_vazia(1, T, N) -> tabuleiro_insere_coluna_fim;
+		\+tabuleiro_primeira_linha_vazia -> tabuleiro_insere_linha_inicio;
+		\+tabuleiro_ultima_linha_vazia -> tabuleiro_insere_linha_fim;
+		true).
 
 tabuleiro_primeira_linha_vazia :-
 	tabuleiro(T),
