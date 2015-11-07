@@ -198,7 +198,7 @@ mostra_mao_linha_V2([ [_|V2] |R]) :-
 mostra_mao_cabecalho(L):-
 	write('+'),
 	!,
-	num_crescente(1, N, L),
+	incrementador(1, N, L),
 	mostra_mao_cabecalho_aux(N),
 	N>=L.
 mostra_mao_cabecalho_aux(N) :- N < 10, write(' '),write(N),write(' +').
@@ -207,7 +207,7 @@ mostra_mao_cabecalho_aux(N) :- N >= 10, write(' '),write(N),write('+').
 mostra_mao_separador(L):-
 	write('+'),
 	!,
-	num_crescente(1, N, L),
+	incrementador(1, N, L),
 	write('---+'),
 	N>=L.
 

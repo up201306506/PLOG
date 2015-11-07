@@ -150,16 +150,6 @@ readInt_NoRepeat(Texto, I, Min, Max) :-
 	read(I),
 	I >= Min, I =< Max.
 
-num_crescente(P, _, Max) :- 
-	P == Max,
-	fail.
-num_crescente(P, N, _) :-
-	N is P.
-num_crescente(P, N, Max) :-
-	R is P+1,
-	num_crescente(R, N, Max).
-	
-
 incrementador(P, N, Max) :-
 	P =< Max,
 	N is P.
