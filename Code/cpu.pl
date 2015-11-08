@@ -1,6 +1,7 @@
-﻿%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%	Encontrar Jogadas	%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+﻿%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%	Encontrar Jogadas Aleatorias	%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 cpu_uma_ao_calhas(J,G,T) :-
 	cpu_todas_jogadas_climb(J,G,T), 
@@ -9,6 +10,11 @@ cpu_uma_ao_calhas(J,G,T) :-
 	cpu_todas_jogadas_expand(J,G,T), 
 	G \= [].
 
+	
+	
+	
+	
+	
 cpu_todas_jogadas_climb(J, G, T) :-
 	jogador(J),
 	findall([P,CL1,CL2],cpu_uma_jogada_climb(J,P,CL1,CL2,T),G).
@@ -224,37 +230,56 @@ cpu_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2],T) :-
 		TV1 == V1,
 		TV2 == V2.
 		
+		
+		
+		
+		
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%	Ver a qualidade		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
+	jogador(J),
+	cpu_todas_jogadas_climb_com_resultado(J,G,T),
+	G \= [],
+	jogador(Joutro), Joutro \= J,
+	qualidade_aux(1, 10000, [P,CL1,CL2], G, Joutro).
+	
+	
+qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
+	jogador(J),
+	cpu_todas_jogadas_expand_com_resultado(J,G,T),
+	G \= [],
+	jogador(Joutro), Joutro \= J,
+	qualidade_aux(1, 30000, [P,CL1,CL2], G, Joutro).
+	
+qualidade_aux(N, Q, [P,CL1,CL2], G, J) :-
+	length(G, L),
+	N =< L,
+	list_element_at(Valores,G,N),
+		list_element_at(Pnext,Valores,1),
+		list_element_at(CL1next,Valores,2),
+		list_element_at(CL2next,Valores,3),
+		list_element_at(TFF,Valores,4),
+	cpu_todas_jogadas_climb(J,JGC,TFF), length(JGC, L1C),
+	cpu_todas_jogadas_expand(J,JGE,TFF), length(JGE, L2E),
+	Res is L1C+L2E,
+	write(Res), nl,
+	Next is N+1,
+	(
+	Res < Q 
+		-> 	qualidade_aux(Next, Res, [Pnext,CL1next,CL2next], G, J)
+		;	qualidade_aux(Next, Q, [P,CL1,CL2], G, J)
+	).
+	
+	
+	
+	
 
-	
-%qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
-%	cpu_todas_jogadas_climb_com_resultado(J,G,T),
-%	qualidade_aux([P,CL1,CL2], G, Q).
-	
 
-%qualidade_aux(_, [], _).
-%qualidade_aux([P,CL1,CL2], G, Q) :-
-	
-
-	
-tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
-	tabuleiro(TI),
-	tabuleiro_get(TI,[C1|L1], _, A1),
-	tabuleiro_get(TI,[C2|L2], _, A2),
-	A1 == A2,
-	A is A1+1,
-	tabuleiro_set(TI, [C1|L1], V1, A, TF),
-	tabuleiro_set(TF, [C2|L2], V2, A, TFF).
-	
-	
 
 cpu_todas_jogadas_climb_com_resultado(J, G, T) :-
-	jogador(J),
-	findall([P,CL1,CL2,TFF],cpu_uma_jogada_climb(J,P,CL1,CL2,T,TFF),G).
-
+	findall([P,CL1,CL2,TFF],cpu_uma_jogada_climb_com_resultado(J,P,CL1,CL2,T,TFF),G).
 cpu_uma_jogada_climb_com_resultado(J,P,CL1,CL2,T,TFF) :-
 	jogador(J),
     mao(J, M),
@@ -266,3 +291,40 @@ cpu_uma_jogada_climb_com_resultado(J,P,CL1,CL2,T,TFF) :-
 		cpu_uma_jogada_climb_aux_colunas2(L,M,P,CL1,CL2,T)
 	),
 	tabuleiro_se_jogasse_peca(P,CL1,CL2,TFF).
+	
+cpu_todas_jogadas_expand_com_resultado(J, G, T) :-
+	jogador(J),
+	findall([P,CL1,CL2,TFF],cpu_uma_jogada_expand_com_resultado(J,P,CL1,CL2,T,TFF),G).
+cpu_uma_jogada_expand_com_resultado(J,P,CL1,CL2,T,TFF) :-
+	jogador(J),
+    mao(J, M),
+	length(M, L),
+	( 
+		cpu_uma_jogada_expand_aux_linhas1(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_expand_aux_linhas2(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_expand_aux_colunas1(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_expand_aux_colunas2(L,M,P,CL1,CL2,T)
+	),
+	tabuleiro_se_jogasse_peca(P,CL1,CL2,TFF).
+	
+
+	
+tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
+	tabuleiro(TI),
+	tabuleiro_get(TI,[C1|L1], _, A1),
+	tabuleiro_get(TI,[C2|L2], _, A2),
+	A1 == A2,
+	A is A1+1,
+	tabuleiro_set(TI, [C1|L1], V1, A, TF),
+	tabuleiro_set(TF, [C2|L2], V2, A, TFF).	 
+ 
+	 
+	%%%%
+	%testar:
+	%%%%		
+			teste :-
+				tabuleiro_jogar_peca([7|7],[7|5],[7|6]),
+				mao_reiniciar(jogador1),mao_acrescentar_peca([[6|6]], jogador1), 
+				mao_reiniciar(jogador2),mao_acrescentar_peca([[1|7]], jogador2),mao_acrescentar_peca([[6|7]], jogador2),
+				tabuleiro(T), qualidade_a_melhor_jogada(jogador2, [P,CL1,CL2], T),
+				write(P),write(','),write(CL1),write(','),write(CL2),nl.

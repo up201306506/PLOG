@@ -411,8 +411,10 @@ main_jogador_computador_facil(J) :-
 		sleep(5),
 	%Verificar se e valido
 		!,
-		(tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
-		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])),
+		(
+		 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
+		 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+		 ),
 	%alterar tabuleiro, tirar a peça ao jogador
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
 		!,
