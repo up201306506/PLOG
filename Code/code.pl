@@ -150,7 +150,6 @@ tabuleiro_set(TI, [C|L], V, A, TF) :-
 	
 	
 tabuleiro_get(T,[C|L], V, A) :- 
-	tabuleiro(T),
 	C > 0,
 	L > 0,
 	list_element_at(Y, T, L),
@@ -165,8 +164,9 @@ tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D) :-
 	D is X+Y.
 	
 tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]) :-
-	tabuleiro_get(_,[C1|L1], _, A1),
-	tabuleiro_get(_,[C2|L2], _, A2),
+	tabuleiro(TI),
+	tabuleiro_get(TI,[C1|L1], _, A1),
+	tabuleiro_get(TI,[C2|L2], _, A2),
 	A1 == A2,
 	A is A1+1,
 	tabuleiro_set(TI, [C1|L1], V1, A, TF),
@@ -191,31 +191,32 @@ tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) :-
 	%uma das peças circundantes devem ter o mesmo valor		
 		A is TA1 + 1,
 		(
-			expand_aux(V1, [C1|L1], A);
-			expand_aux(V2, [C2|L2], A)
+			expand_aux(V1, [C1|L1], A, T);
+			expand_aux(V2, [C2|L2], A, T)
 		).
-			expand_aux(V, [C|L], A) :-
+			
+			expand_aux(V, [C|L], A, T) :-
 				%à esquerda
 					C2 is C-1,
-					tabuleiro_get(_, [C2|L], V2, A2),
+					tabuleiro_get(T, [C2|L], V2, A2),
 					A == A2,
 					V == V2.
-			expand_aux(V, [C|L], A) :-
+			expand_aux(V, [C|L], A, T) :-
 				%à direita
 					C2 is C+1,
-					tabuleiro_get(_, [C2|L], V2, A2),
+					tabuleiro_get(T, [C2|L], V2, A2),
 					A == A2,
 					V == V2.
-			expand_aux(V, [C|L], A) :-
+			expand_aux(V, [C|L], A, T) :-
 				%abaixo
 					L2 is L+1,
-					tabuleiro_get(_, [C|L2], V2, A2),
+					tabuleiro_get(T, [C|L2], V2, A2),
 					A == A2,
 					V == V2.
-			expand_aux(V, [C|L], A) :-
+			expand_aux(V, [C|L], A, T) :-
 				%acima
 					L2 is L-1,
-					tabuleiro_get(_, [C|L2], V2, A2),
+					tabuleiro_get(T, [C|L2], V2, A2),
 					A == A2,
 					V == V2.
 
@@ -386,13 +387,14 @@ main_jogador_humano(J) :-
 		
 main_jogador_computador_facil(J) :-
 		cls,
+		tabuleiro(T),
 		mostra_tabuleiro(_),
 		mostra_mao_jogador(J),
 	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
 		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),	
 		(
-			(cpu_todas_jogadas_expand(J,G), G \= [], Type is 2);
-			(cpu_todas_jogadas_climb(J,G), G \= [], Type is 1)
+			(cpu_todas_jogadas_expand(J,G,T), G \= [], Type is 2);
+			(cpu_todas_jogadas_climb(J,G,T), G \= [], Type is 1)
 		),
 	%Escolher a Jogada que vai fazer
 		length(G, JogadasL),
