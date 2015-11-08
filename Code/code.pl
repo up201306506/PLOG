@@ -400,11 +400,8 @@ main_jogador_computador_facil(J) :-
 		mostra_tabuleiro(T),
 		mostra_mao_jogador(J),
 	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
-		write('O computador '), write(J), write(' esta escolher uma peca para jogar...'), nl, sleep(1),	
-		(
-			(cpu_todas_jogadas_climb(J,G,T), G \= [], Type is 1);
-			(cpu_todas_jogadas_expand(J,G,T), G \= [], Type is 2)
-		),
+		write('O computador '), write(J), write(' esta escolher uma peca para jogar...'), nl, sleep(1),
+		cpu_uma_ao_calhas(J,G,T),
 	%Escolher a Jogada que vai fazer
 		length(G, JogadasL),
 		random(0, JogadasL, N),
@@ -414,10 +411,8 @@ main_jogador_computador_facil(J) :-
 		sleep(5),
 	%Verificar se e valido
 		!,
-		(Type = 1 
-		->	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
-			tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
-		),
+		(tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
+		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])),
 	%alterar tabuleiro, tirar a peça ao jogador
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
 		!,

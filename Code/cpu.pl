@@ -2,6 +2,13 @@
 %%	Encontrar Jogadas	%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+cpu_uma_ao_calhas(J,G,T) :-
+	cpu_todas_jogadas_climb(J,G,T), 
+	G \= [].
+cpu_uma_ao_calhas(J,G,T) :-
+	cpu_todas_jogadas_expand(J,G,T), 
+	G \= [].
+
 cpu_todas_jogadas_climb(J, G, T) :-
 	jogador(J),
 	findall([P,CL1,CL2],cpu_uma_jogada_climb(J,P,CL1,CL2,T),G).
