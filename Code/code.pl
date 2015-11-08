@@ -314,7 +314,7 @@ jogar(Dificuldade) :-
 main_jogada_inicial :-
 	mao_quem_tem_peca([7|7], JI),
 	mao_remover_peca(JI, [7|7]),
-	tabuleiro_jogar_peca([7|7], [3|3], [3|4]),
+	tabuleiro_jogar_peca([7|7], [5|6], [6|6]),
 	jogador_escolhido(J),
 	(JI = J -> jogador_trocar_vez(J); true).
 	
@@ -409,9 +409,9 @@ main_jogador_computador_facil(J) :-
 			tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
 		),
 	%alterar tabuleiro, tirar a peça ao jogador
-		!,
 		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
-		mao_remover_peca(J, [V1|V2]),
+		!,
+		(mao_remover_peca(J, [V1|V2]);mao_remover_peca(J, [V2|V1])),
 	%Ver se o outro jogador pode jogar, trocar a vez se sim
 		jogador(Joutro), Joutro \= J,
 		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
