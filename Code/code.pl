@@ -380,12 +380,31 @@ main_jogador_computador_facil(J) :-
 		cls,
 		mostra_tabuleiro(_),
 		mostra_mao_jogador(J),
-	%Escolher a Peca
+	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
 		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),	
-		
-		
-	%Ver se o outro jogador pode jogar, trocar a vez se sim
+		(
+			(cpu_todas_jogadas_expand(J,G), G \= [], Type is 2);
+			(cpu_todas_jogadas_climb(J,G), G \= [], Type is 1)
+		),
+	%Escolher a Jogada que vai fazer
+		length(G, JogadasL),
+		random(0, JogadasL, N),
+		list_element_at([[V1|V2],[C1|L1],[C2|L2]], G, N),
+		nl, write('Type:'), write(Type),
+		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
+		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
+		sleep(4),
+	%Verificar se e valido
 		!,
+		(Type = 1 
+		->	tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
+			tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+		),
+	%alterar tabuleiro, tirar a peça ao jogador
+		!,
+		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
+		mao_remover_peca(J, [V1|V2]),
+	%Ver se o outro jogador pode jogar, trocar a vez se sim
 		jogador(Joutro), Joutro \= J,
 		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
 	%expandir o tabuleiro se necessário
