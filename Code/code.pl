@@ -403,14 +403,13 @@ main_jogador_computador_facil(J) :-
 	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
 		write('O computador '), write(J), write(' esta escolher uma peca para jogar...'), nl, sleep(1),	
 		(
-			(cpu_todas_jogadas_expand(J,G,T), G \= [], Type is 2);
-			(cpu_todas_jogadas_climb(J,G,T), G \= [], Type is 1)
+			(cpu_todas_jogadas_climb(J,G,T), G \= [], Type is 1);
+			(cpu_todas_jogadas_expand(J,G,T), G \= [], Type is 2)
 		),
 	%Escolher a Jogada que vai fazer
 		length(G, JogadasL),
 		random(0, JogadasL, N),
 		list_element_at([[V1|V2],[C1|L1],[C2|L2]], G, N),
-		nl, write('Type:'), write(Type),
 		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
 		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
 		sleep(5),
