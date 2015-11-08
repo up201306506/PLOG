@@ -8,11 +8,13 @@
 
 %:-now(time), setrand(time).
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Init			%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%
+	%	Algumas funções finais/teste requerem que alguns factos sejam declarados como dinamicos antes de serem usados, 
+	%	pelo que o fazemos logo aqui
+	%
 
 
 jogador(jogador1).
@@ -43,6 +45,232 @@ jogador_escolhido(jogador1).
 estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
 
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Main			%%
+%%%%%%%%%%%%%%%%%%%%%%
+	%
+	%	Funções Importantes:
+	%
+	%	:- dominup.
+	%		A forma correcta que deve ser chamada para o jogador iniciar o jogo.
+	%
+	%	:- jogar(Escolha).
+	%		Predicado que é chamado pelos menus e que indica qual o modo de jogo escolhido à função main_loop,
+	%		após iniciar o jogo adequadamente. O jogo começa com: 
+	%			1- Dar aleatóriamente as peças do baralho aos jogadores, uma a uma.
+	%			2- A procura da peça [7|7] nas mãos dos jogadores.
+	%			3- Esse jogador é forçado a jogar essa peça no centro do tabuleiro.
+	%			4- O jogador passa a vez e o outro joga normalmente daqui por diante.
+	%		O passo 1 é feito por baralho_dar_as_pecas.
+	%		Os passo 2 e 3 são feito por main_jogada_inicial.
+	%
+	%
+	%	:- main_loop(Escolha).
+	%		Quatro versões desta funções fazem a lógica do jogo de formas diferentes. Todos tem que iniciar a vez 
+	%		do jogadores ou computadores quando adequado, e todos tem que ser capazes de terminar o jogo quando se
+	%		atinge a condição de vitória (mão vazia).
+	%		Modos:
+	%				1 - Jogador vs Jogador
+	%				2 - Jogador vs CPU fácil
+	%				3 - Jogador vs CPU dificil
+	%				4 - CPU dificil vs CPU dificil
+	%		O computador difcil comporta-se como um fácil até ter menos que 1 peças.	
+	%
+	%	
+	%	:- main_victoria(J).
+	%		Anuncia a vitória do jogador J e acaba o jogo depois de mostrar o tabuleiro final.
+	%		
+	%	:- main_jogador_humano(J).	
+	%	:- main_jogador_computador_facil(J).
+	%	:- main_jogador_computador_dificil(J).
+	%		Predicados que fazem displays/reads e verificam as jogadas dos jogadores ou compuadores.
+	%		O computador facil
+	%
+	%
+	%
+	%
+	%
+	%
+	%
+	%
+	%
+
+dominup :- menu_principal.
+
+jogar(Escolha) :- 
+	Escolha >= 0, Escolha < 4,
+	baralho_reiniciar,
+	mao_reiniciar(jogador1),
+	mao_reiniciar(jogador2),
+	tabuleiro_reiniciar,
+	baralho_dar_as_pecas,
+	!,
+	main_jogada_inicial,
+	!,
+	repeat,
+	main_loop(Escolha).
+			
+main_jogada_inicial :-
+	mao_quem_tem_peca([7|7], JI),
+	mao_remover_peca(JI, [7|7]),
+	tabuleiro_jogar_peca([7|7], [5|6], [6|6]),
+	jogador_escolhido(J),
+	(JI = J -> jogador_trocar_vez(J); true).
+	
+main_loop(0) :- 
+		jogador_escolhido(J),
+		main_jogador_humano(J),
+		!,
+		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
+
+main_loop(1) :-
+	jogador_escolhido(J),
+	(J = 'jogador1' -> main_jogador_humano(J); main_jogador_computador_facil(J)),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
+	
+main_loop(2) :-
+	jogador_escolhido(J),
+	mao(J, MJ), length(MJ, ML),
+	(J = 'jogador1' -> main_jogador_humano(J)
+					; 
+					( ML < 10
+						-> main_jogador_computador_dificil(J);
+							main_jogador_computador_facil(J)
+					)
+	),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(2)).
+
+main_loop(3) :-
+	jogador_escolhido(J),
+	mao(J, MJ), length(MJ, ML),
+	( ML < 10
+		-> main_jogador_computador_dificil(J);
+			main_jogador_computador_facil(J)
+	),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(3)).
+	
+	
+main_victoria(J) :-
+	cls,
+	nl,nl,nl,
+	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
+	write('tabuleiro final:'), nl,
+	tabuleiro(T),
+	mostra_tabuleiro(T).
+	
+main_jogador_humano(J) :-
+	%Escolher a Peca
+		cls,
+		tabuleiro(T),
+		mostra_tabuleiro(T),
+		mostra_mao_jogador(J),
+			mao(J,M), length(M, ML),
+		readInt('Qual a peca que quer jogar?', Input, 1, ML),
+	%Escolher a Posição da cabeça
+		!,
+		cls,
+		mostra_tabuleiro(T),
+		mao_escolher_peca(J, Input, [V1|V2]),
+		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cabeca: '), write(V1) , nl,
+			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
+		write('Quais as coordenadas da cabeca da peca que quer jogar?'), nl,
+		readInt('Coluna?', C1, 1, NC),
+		readInt('Linha?', L1, 1, NL),
+	%Escolher a Posição da cauda
+		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cauda: '), write(V2) , nl,
+			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
+		write('Quais as coordenadas da cauda da peca que quer jogar?'), nl,
+		readInt('Coluna?', C2, 1, NC),
+		readInt('Linha?', L2, 1, NL),
+	%Verificar se e valido
+		!,
+		cls,
+		write('A verificar se a jogada e valida...'), nl, sleep(1),
+		(
+		tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
+		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) 
+		),
+		write('A jogada e valida e foi efectuada'), nl, sleep(1),
+	%alterar tabuleiro, tirar a peça ao jogador
+		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
+		mao_remover_peca(J, [V1|V2]),
+	%Ver se o outro jogador pode jogar, trocar a vez se sim
+		!,
+		jogador(Joutro), Joutro \= J,
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
+	%expandir o tabuleiro se necessário
+		tabuleiro_dimensiona, tabuleiro_dimensiona.
+		
+main_jogador_computador_facil(J) :-
+		cls,
+		tabuleiro(T),
+		mostra_tabuleiro(T),
+		mostra_mao_jogador(J),
+	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
+		write('O computador '), write(J), write(' esta a escolher uma peca para jogar...'), nl,
+		cpu_uma_ao_calhas(J,G,T),
+	%Escolher a Jogada que vai fazer
+		length(G, JogadasL),
+		random(0, JogadasL, N),
+		list_element_at([[V1|V2],[C1|L1],[C2|L2]], G, N),
+		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
+		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
+		sleep(3),
+	%Verificar se e valido
+		!,
+		(
+		 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
+		 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+		 ),
+	%alterar tabuleiro, tirar a peça ao jogador
+		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
+		!,
+		(mao_remover_peca(J, [V1|V2]);mao_remover_peca(J, [V2|V1])),
+	%Ver se o outro jogador pode jogar, trocar a vez se sim
+		jogador(Joutro), Joutro \= J,
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
+	%expandir o tabuleiro se necessário
+		tabuleiro_dimensiona, tabuleiro_dimensiona.
+
+main_jogador_computador_dificil(J) :-
+		cls,
+		tabuleiro(T),
+		mostra_tabuleiro(T),
+		mostra_mao_jogador(J),
+	%Encontra a lista de todas as jogadas possiveis, com prioridade a Climb
+		write('O computador '), write(J), write(' esta -cuidadosamente- a escolher uma peca para jogar...'), nl, sleep(1),
+	%Escolher a Jogada que vai fazer
+		qualidade_a_melhor_jogada(J, [V1|V2],[C1|L1],[C2|L2]),
+		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
+		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
+		sleep(3),
+	%Verificar se e valido
+		!,
+		(
+		 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
+		 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
+		 ),
+	%alterar tabuleiro, tirar a peça ao jogador
+		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
+		!,
+		(mao_remover_peca(J, [V1|V2]);mao_remover_peca(J, [V2|V1])),
+	%Ver se o outro jogador pode jogar, trocar a vez se sim
+		jogador(Joutro), Joutro \= J,
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
+	%expandir o tabuleiro se necessário
+		tabuleiro_dimensiona, tabuleiro_dimensiona.
+		
+
+		
+		
+		
+		
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Jogador			%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -289,181 +517,7 @@ mao_reiniciar(J) :-
 		jogador(J),
 		mao(J, M),
 		retract(mao(J, M)),
-		assert(mao(J, [])).
-				
-
-%%%%%%%%%%%%%%%%%%%%%%
-%%	Main			%%
-%%%%%%%%%%%%%%%%%%%%%%
-
-dominup :- menu_principal.
-
-jogar(Dificuldade) :- 
-	Dificuldade >= 0, Dificuldade < 4,
-	baralho_reiniciar,
-	mao_reiniciar(jogador1),
-	mao_reiniciar(jogador2),
-	tabuleiro_reiniciar,
-	baralho_dar_as_pecas,
-	!,
-	main_jogada_inicial,
-	!,
-	repeat,
-	main_loop(Dificuldade).
-			
-main_jogada_inicial :-
-	mao_quem_tem_peca([7|7], JI),
-	mao_remover_peca(JI, [7|7]),
-	tabuleiro_jogar_peca([7|7], [5|6], [6|6]),
-	jogador_escolhido(J),
-	(JI = J -> jogador_trocar_vez(J); true).
-	
-main_loop(0) :- 
-		jogador_escolhido(J),
-		main_jogador_humano(J),
-		!,
-		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
-
-main_loop(1) :-
-	jogador_escolhido(J),
-	(J = 'jogador1' -> main_jogador_humano(J); main_jogador_computador_facil(J)),
-	!,
-	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
-	
-main_loop(2) :-
-	jogador_escolhido(J),
-	mao(J, MJ), length(MJ, ML),
-	(J = 'jogador1' -> main_jogador_humano(J)
-					; 
-					( ML < 10
-						-> main_jogador_computador_dificil(J);
-							main_jogador_computador_facil(J)
-					)
-	),
-	!,
-	(mao_vazia(J) ->  main_victoria(J); main_loop(2)).
-
-main_loop(3) :-
-	jogador_escolhido(J),
-	mao(J, MJ), length(MJ, ML),
-	( ML < 10
-		-> main_jogador_computador_dificil(J);
-			main_jogador_computador_facil(J)
-	),
-	!,
-	(mao_vazia(J) ->  main_victoria(J); main_loop(3)).
-	
-	
-main_victoria(J) :-
-	cls,
-	nl,nl,nl,
-	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
-	write('tabuleiro final:'), nl,
-	tabuleiro(T),
-	mostra_tabuleiro(T).
-	
-main_jogador_humano(J) :-
-	%Escolher a Peca
-		cls,
-		tabuleiro(T),
-		mostra_tabuleiro(T),
-		mostra_mao_jogador(J),
-			mao(J,M), length(M, ML),
-		readInt('Qual a peca que quer jogar?', Input, 1, ML),
-	%Escolher a Posição da cabeça
-		!,
-		cls,
-		mostra_tabuleiro(T),
-		mao_escolher_peca(J, Input, [V1|V2]),
-		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cabeca: '), write(V1) , nl,
-			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
-		write('Quais as coordenadas da cabeca da peca que quer jogar?'), nl,
-		readInt('Coluna?', C1, 1, NC),
-		readInt('Linha?', L1, 1, NL),
-	%Escolher a Posição da cauda
-		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cauda: '), write(V2) , nl,
-			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
-		write('Quais as coordenadas da cauda da peca que quer jogar?'), nl,
-		readInt('Coluna?', C2, 1, NC),
-		readInt('Linha?', L2, 1, NL),
-	%Verificar se e valido
-		!,
-		cls,
-		write('A verificar se a jogada e valida...'), nl, sleep(1),
-		(
-		tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);
-		tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2]) 
-		),
-		write('A jogada e valida e foi efectuada'), nl, sleep(1),
-	%alterar tabuleiro, tirar a peça ao jogador
-		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
-		mao_remover_peca(J, [V1|V2]),
-	%Ver se o outro jogador pode jogar, trocar a vez se sim
-		!,
-		jogador(Joutro), Joutro \= J,
-		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
-	%expandir o tabuleiro se necessário
-		tabuleiro_dimensiona, tabuleiro_dimensiona.
-		
-main_jogador_computador_facil(J) :-
-		cls,
-		tabuleiro(T),
-		mostra_tabuleiro(T),
-		mostra_mao_jogador(J),
-	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
-		write('O computador '), write(J), write(' esta a escolher uma peca para jogar...'), nl,
-		cpu_uma_ao_calhas(J,G,T),
-	%Escolher a Jogada que vai fazer
-		length(G, JogadasL),
-		random(0, JogadasL, N),
-		list_element_at([[V1|V2],[C1|L1],[C2|L2]], G, N),
-		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
-		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
-		sleep(3),
-	%Verificar se e valido
-		!,
-		(
-		 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
-		 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
-		 ),
-	%alterar tabuleiro, tirar a peça ao jogador
-		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
-		!,
-		(mao_remover_peca(J, [V1|V2]);mao_remover_peca(J, [V2|V1])),
-	%Ver se o outro jogador pode jogar, trocar a vez se sim
-		jogador(Joutro), Joutro \= J,
-		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
-	%expandir o tabuleiro se necessário
-		tabuleiro_dimensiona, tabuleiro_dimensiona.
-
-main_jogador_computador_dificil(J) :-
-		cls,
-		tabuleiro(T),
-		mostra_tabuleiro(T),
-		mostra_mao_jogador(J),
-	%Encontra a lista de todas as jogadas possiveis, com prioridade a Climb
-		write('O computador '), write(J), write(' esta -cuidadosamente- a escolher uma peca para jogar...'), nl, sleep(1),
-	%Escolher a Jogada que vai fazer
-		qualidade_a_melhor_jogada(J, [V1|V2],[C1|L1],[C2|L2]),
-		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
-		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
-		sleep(3),
-	%Verificar se e valido
-		!,
-		(
-		 tabuleiro_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2]);	
-		 tabuleiro_pode_jogar_peca_expand([V1|V2], [C1|L1], [C2|L2])
-		 ),
-	%alterar tabuleiro, tirar a peça ao jogador
-		tabuleiro_jogar_peca([V1|V2], [C1|L1], [C2|L2]),
-		!,
-		(mao_remover_peca(J, [V1|V2]);mao_remover_peca(J, [V2|V1])),
-	%Ver se o outro jogador pode jogar, trocar a vez se sim
-		jogador(Joutro), Joutro \= J,
-		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
-	%expandir o tabuleiro se necessário
-		tabuleiro_dimensiona, tabuleiro_dimensiona.
-			
+		assert(mao(J, [])).		
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Baralho			%%
