@@ -380,9 +380,9 @@ main_jogador_computador_facil(J) :-
 		cls,
 		mostra_tabuleiro(_),
 		mostra_mao_jogador(J),
-		mao(J,M), length(M, ML),
 	%Escolher a Peca
-		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),
+		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),	
+		
 		
 	%Ver se o outro jogador pode jogar, trocar a vez se sim
 		!,
