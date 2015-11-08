@@ -145,7 +145,6 @@ jogador_jogadas_disponiveis_expand_aux_colunas(L, M) :-
 %%%%%%%%%%%%%%%%%%%%%%
 
 tabuleiro_set(TI, [C|L], V, A, TF) :-
-	tabuleiro(TI),
 	matrix_setCell(L, C, TI, [V|A], TF).
 	
 	

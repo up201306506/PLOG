@@ -235,8 +235,8 @@ cpu_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2],T) :-
 	
 tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
 	tabuleiro(TI),
-	tabuleiro_get(T,[C1|L1], _, A1),
-	tabuleiro_get(T,[C2|L2], _, A2),
+	tabuleiro_get(TI,[C1|L1], _, A1),
+	tabuleiro_get(TI,[C2|L2], _, A2),
 	A1 == A2,
 	A is A1+1,
 	tabuleiro_set(TI, [C1|L1], V1, A, TF),
