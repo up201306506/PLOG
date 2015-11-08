@@ -300,7 +300,7 @@ mao_reiniciar(J) :-
 dominup :- menu_principal.
 
 jogar(Dificuldade) :- 
-	Dificuldade >= 0, Dificuldade < 3,
+	Dificuldade >= 0, Dificuldade < 4,
 	baralho_reiniciar,
 	mao_reiniciar(jogador1),
 	mao_reiniciar(jogador2),
@@ -335,13 +335,13 @@ main_loop(2) :-
 	jogador_escolhido(J),
 	(J = 'jogador1' -> main_jogador_humano(J); main_jogador_computador_facil(J)),
 	!,
-	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
+	(mao_vazia(J) ->  main_victoria(J); main_loop(2)).
 
 main_loop(3) :-
 	jogador_escolhido(J),
 	main_jogador_computador_facil(J),
 	!,
-	(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
+	(mao_vazia(J) ->  main_victoria(J); main_loop(3)).
 	
 	
 main_victoria(J) :-
@@ -349,19 +349,21 @@ main_victoria(J) :-
 	nl,nl,nl,
 	write('                VICTORIA DO JOGADOR '), write(J),nl,nl,
 	write('tabuleiro final:'), nl,
-	mostra_tabuleiro(_).
+	tabuleiro(T),
+	mostra_tabuleiro(T).
 	
 main_jogador_humano(J) :-
 	%Escolher a Peca
 		cls,
-		mostra_tabuleiro(_),
+		tabuleiro(T),
+		mostra_tabuleiro(T),
 		mostra_mao_jogador(J),
 			mao(J,M), length(M, ML),
 		readInt('Qual a peca que quer jogar?', Input, 1, ML),
 	%Escolher a Posição da cabeça
 		!,
 		cls,
-		mostra_tabuleiro(_),
+		mostra_tabuleiro(T),
 		mao_escolher_peca(J, Input, [V1|V2]),
 		write('Peca escolhida: ['), write(V1), write('|'), write(V2), write(']. Valor da cabeca: '), write(V1) , nl,
 			tabuleiro([TH|TR]), length([TH|TR], NL), length(TH,NC),
@@ -396,7 +398,7 @@ main_jogador_humano(J) :-
 main_jogador_computador_facil(J) :-
 		cls,
 		tabuleiro(T),
-		mostra_tabuleiro(_),
+		mostra_tabuleiro(T),
 		mostra_mao_jogador(J),
 	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
 		write('O computador '), write(J), write(' esta escolher uma peca para jogar...'), nl, sleep(1),	

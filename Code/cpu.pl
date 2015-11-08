@@ -221,6 +221,18 @@ cpu_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2],T) :-
 %%	Ver a qualidade		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+	
+%qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
+%	cpu_todas_jogadas_climb_com_resultado(J,G,T),
+%	qualidade_aux([P,CL1,CL2], G, Q).
+	
+
+%qualidade_aux(_, [], _).
+%qualidade_aux([P,CL1,CL2], G, Q) :-
+	
+
+	
 tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
 	tabuleiro(TI),
 	tabuleiro_get(T,[C1|L1], _, A1),
@@ -229,3 +241,21 @@ tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
 	A is A1+1,
 	tabuleiro_set(TI, [C1|L1], V1, A, TF),
 	tabuleiro_set(TF, [C2|L2], V2, A, TFF).
+	
+	
+
+cpu_todas_jogadas_climb_com_resultado(J, G, T) :-
+	jogador(J),
+	findall([P,CL1,CL2,TFF],cpu_uma_jogada_climb(J,P,CL1,CL2,T,TFF),G).
+
+cpu_uma_jogada_climb_com_resultado(J,P,CL1,CL2,T,TFF) :-
+	jogador(J),
+    mao(J, M),
+	length(M, L),
+	( 
+		cpu_uma_jogada_climb_aux_linhas1(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_climb_aux_linhas2(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_climb_aux_colunas1(L,M,P,CL1,CL2,T);
+		cpu_uma_jogada_climb_aux_colunas2(L,M,P,CL1,CL2,T)
+	),
+	tabuleiro_se_jogasse_peca(P,CL1,CL2,TFF).

@@ -166,7 +166,7 @@ mostra_N_col(N,L) :-
 				
 				
 mostra_tabuleiro([L|R]) :-  	
-		tabuleiro([L|R]),
+		%tabuleiro([L|R]),
 		length(L,N),
 		mostra_N_col(0, N), nl,
 		mostra(1, [L|R], N),
