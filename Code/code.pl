@@ -86,17 +86,14 @@ estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
 	%	:- main_jogador_humano(J).	
 	%	:- main_jogador_computador_facil(J).
 	%	:- main_jogador_computador_dificil(J).
-	%		Predicados que fazem displays/reads e verificam as jogadas dos jogadores ou compuadores.
-	%		O computador facil
+	%		Predicados que fazem displays/reads e verificam as jogadas dos jogadores ou computadores.
+	%		O computador facil joga aleatoriamente de entre todas as jogadas válidas, o computador dificil 
+	%		escreve a indicação de que está "-cuidadosamente-" a fazer a melhor decisão entre todas as escolhas.
+	%		Se o oponente não poder jogar peças no próximo turno, não é trocada a indicação de qual o jogador
+	%		que joga a seguir.
 	%
 	%
-	%
-	%
-	%
-	%
-	%
-	%
-	%
+
 
 dominup :- menu_principal.
 
@@ -274,6 +271,18 @@ main_jogador_computador_dificil(J) :-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Jogador			%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%	
+	%	:- jogador_trocar_vez(J)
+	%		Encontra o jogador que esteja marcado para fazer o próximo turno, e troca essa marca para o oponente
+	%	
+	%	:- jogador_pode_jogar(J).
+	%	:- jogador_jogadas_disponiveis_climb(J).
+	%	:- jogador_jogadas_disponiveis_expand(J).
+	%		Percorre as posições do tabuleiro, por 2 linhas e por 2 colunas, e vê se é possivel o jogador colocar
+	%		qualquer uma das peças que tem na mão.
+	%		Nas funções auxiliares, as variaveis L e M representam a mão do jogador M e a quantidade de peças nela L.
+	%	
+	%	
 
 jogador_trocar_vez(J) :- jogador(X),
 						X \= J,
@@ -371,6 +380,29 @@ jogador_jogadas_disponiveis_expand_aux_colunas(L, M) :-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%	
+	%	:- tabuleiro_set(TI, [C|L], V, A, TF).
+	%		Recebe um tabuleiro TI, e muda os valores nas coordenadas C,L pelos valores V,A resultando no tabuleiro TF.
+	%	
+	%	:- tabuleiro_get(T,[C|L], V, A).
+	%		Encontra no tabuleiro T as coordenadas C,L e devolve os valores [V|A].
+	%		
+	%	:- tabuleiro_distancia_coordenadas([C1|L1], [C2|L2], D)
+	%		Dados dois conjuntos de coordenadas, CL1 e CL2, indica a distancia a que estão uma da outra.
+	%		A distancia 1 significa que são adjacentes na horizontal ou vertical.
+	%		
+	%	:- tabuleiro_jogar_peca(P, CL1, CL2).
+	%		Joga a peça P no tabuleiro nas coordenadas CL1 (cabeça) e CL2 (cauda). Assume que já foram feitas 
+	%		verificações pelo que só ve se as coordenadas tem a mesma altura.
+	%		
+	%	:-tabuleiro_pode_jogar_peca_expand(P, CL1, CL2).
+	%	:-tabuleiro_pode_jogar_peca_climb(P, CL1, CL2).
+	%		As verificações à função anterior. Apenas indicam se pode ser jogado ou não.
+	%		
+	%	:- tabuleiro_reiniciar.
+	%		Esvazia o tabuleiro de jogo e retorna-o as suas dimensões às originais.
+	%		
+	%		
 
 tabuleiro_set(TI, [C|L], V, A, TF) :-
 	matrix_setCell(L, C, TI, [V|A], TF).
