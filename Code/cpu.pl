@@ -1,7 +1,27 @@
 ﻿%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%	Encontrar Jogadas Aleatorias	%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+	%	
+	%	Funções Importantes:
+	%		
+	%	:-cpu_uma_ao_calhas(J,G,T).
+	%		Recebe um jogador J e um tabuleiro T, e primeiro devolve em G a lista de, ou:
+	%			*	cpu_todas_jogadas_climb(J,G,T). - Todas as jogadas do typo Climb que pode efectuar
+	%		e se não existirem;
+	%			*	cpu_todas_jogadas_expand(J,G,T). - Todas as jogadas do typo Expand que pode efectuar
+	%		a funções encontram jogadas possiveis a percorrer o tabuleiro com as peças posicionadas na vertical 
+	%		ou na horizontal, indicado por aux_linhas# ou aux_colunas#. O valor 1 ou 2 do # indica se a peça está
+	%		a ser testada num sentido ou no outro.
+	%		Nas posições, as peças verificam se são jogada válida por uso a
+	%			*	cpu_pode_jogar_peca_expand(P, CL1, CL2, T)
+	%			*	cpu_pode_jogar_peca_climb(P, CL1, CL2, T)
+	%		Onde P é a peça a encaixar, CL1 a coordenada da cabeça da peça e CL2 as coordenadas da cauda da peça. 
+	%		Estas três variaveis tem todas dois valores.
+	%
+	%
+	%
+	%
+	%
 
 cpu_uma_ao_calhas(J,G,T) :-
 	cpu_todas_jogadas_climb(J,G,T), 
@@ -10,10 +30,7 @@ cpu_uma_ao_calhas(J,G,T) :-
 	cpu_todas_jogadas_expand(J,G,T), 
 	G \= [].
 
-	
-	
-	
-	
+
 	
 cpu_todas_jogadas_climb(J, G, T) :-
 	jogador(J),
@@ -237,6 +254,27 @@ cpu_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2],T) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%	Ver a qualidade		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+	%	
+	%	Funções Importantes:
+	%		
+	%	:-qualidade_a_melhor_jogada(J, P,CL1,CL2).
+	%		Recebe um jogador J e, assumindo o tabuleiro de jogo T, procura qual é a melhor de todas jogadas,
+	%		ou seja, qual a peça P e onde - CL1, CL2 - a deve jogar para efectuar a melhor jogada.
+	%		Utiliza uma redefinição das funções usadas por cpu_uma_ao_calhas:
+	%			*	cpu_uma_jogada_climb_com_resultado
+	%			*	cpu_uma_jogada_expand_com_resultado
+	%		Com comportamento semelhante às versões acima, mas para alem das jogadas, tambem geram o tabuleiro
+	%		resultante dessas jogadas:
+	%			* 	tabuleiro_se_jogasse_peca( P,CL1,CL2, TFF) - TFF é igual ao tabuleiro do jogo se a peça P
+	%															fosse colocada em CL1 CL2.
+	%		O que se faz com esses tabuleiros resultantes vai ser acontecer na função
+	%			* 	qualidade_aux(N, Q,  Pprev,CL1prev,CL2prev,  P,CL1,CL2, G, J) - A partir da lista de jogadas G
+	%									que o jogador J pode efectuar, e por uso de recursividade encontra a jogada
+	%									P,CL1,CL2 que obtem a qualidade de jogada Q mais baixa possivel, ou seja
+	%									aquela cujo tabuleiro oferece o menor numero de jogadas ao jogador oponente.
+	%																			  Se uma jogada que ofereça 0 jogadas 
+	%									de resposta é encontrada, essa é retornada de imediato.
+	%
 
 qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
 	tabuleiro(T),
