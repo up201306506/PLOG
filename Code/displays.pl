@@ -1,6 +1,12 @@
 ﻿%%%%%%%%%%%%%%%%%%%%%%
 %%	Limpar			%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%	Funções Importantes:
+	%	
+	%	:-cls.
+	%		Limpa o terminal e empurra para o topo novos elementos que forem mostrados.
+	%
+	%
 
 cls :- write('\e[2J').
 
@@ -8,6 +14,18 @@ cls :- write('\e[2J').
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Menu 			%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%	Funções Importantes:
+	%	
+	%	:-menu_principal.
+	%		Mostra o menu principal do jogo e espera pela escolha do jogador. 
+	%		Deve ser chamado directamente pela função dominup/1 (code.pl).
+	%		
+	%		:-main_menu_opcoes(N).
+	%			Cada um dos valores N representa uma das diferentes opções do menu principal.
+	%		:-menu_dificuldade.
+	%			Mostra o submenu em que se escolhe como se comporta o computador.
+	%
+
 
 menu_principal :-
 	cls,
@@ -44,7 +62,18 @@ menu_dificuldade :-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
-
+	%	Funções Importantes:
+	%	
+	%	:-mostra_tabuleiro(T).
+	%		Recebe um tabuleiro e faz uma representação deste.
+	%
+	%		:-mostra_N_col(N,L).
+	%			Monta o cabeçalho do tabuleiro visivel. L é o numero de colunas, N deve começar a 0.
+	%		:-mostra(I, [L|R], N)
+	%			Recurssivamente monta o tabuleiro com uso das outras funções excepto a do cabeçalho.
+	%		:-mostra_separador(N,L).
+	%			Monta divisões horizontais no tabuleiro.	
+	%		
 
 mostra_peca([_|0]) :- write('     | |').
 mostra_peca([V|H]) :- write('  '),
@@ -135,7 +164,21 @@ exemplo_mostra_tab :- tabuleiro(L), write('Tabuleiro:'), nl, mostra_tabuleiro(L)
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Mãos 			%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%	Funções Importantes:
+	%	
+	%	:-mostra_mao_jogador(J).
+	%		Recebe um Jogador e faz uma representação das peças que este pode jogar.
+	%
+	%		:-mostra_mao_cabecalho.
+	%			Responsável por mostrar o cabeçaho com o numero de ordem das peças.
+	%		:-mostra_mao_linha_V#.
+	%			Responsável por mostrar os valores da cabeça ou da cauda de cada peça.
+	%		:-mostra_mao_separador.
+	%			Responsável por mostrar os separadores horizontais.
+	%		
 
+	
+	
 %+ # + # + # +
 %+---+---+---+
 %| V | V | V |
