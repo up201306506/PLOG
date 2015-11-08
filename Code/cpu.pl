@@ -243,6 +243,7 @@ qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
 	jogador(J),
 	cpu_todas_jogadas_climb_com_resultado(J,G,T),
 	G \= [],
+	%write('CPU Climb'), nl,
 	jogador(Joutro), Joutro \= J,
 	qualidade_aux(1, 10000, 0,0,0, P,CL1,CL2, G, Joutro).
 qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
@@ -250,6 +251,7 @@ qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
 	jogador(J),
 	cpu_todas_jogadas_expand_com_resultado(J,G,T),
 	G \= [],
+	%write('CPU Expand'), nl,
 	jogador(Joutro), Joutro \= J,
 	qualidade_aux(1, 30000, 0,0,0, P,CL1,CL2, G, Joutro).
 
@@ -267,6 +269,7 @@ qualidade_aux(N, _,  Pprev,CL1prev,CL2prev, P,CL1,CL2, G, _) :-
 	CL2 = CL2prev.
 	
 qualidade_aux(N, Q,  Pprev,CL1prev,CL2prev,  P,CL1,CL2, G, J) :-
+	%write(Pprev),write(','),write(CL1prev),write(','),write(CL2prev),nl,
 	length(G, L),
 	N =< L,
 	list_element_at(Valores,G,N),
@@ -277,7 +280,7 @@ qualidade_aux(N, Q,  Pprev,CL1prev,CL2prev,  P,CL1,CL2, G, J) :-
 	cpu_todas_jogadas_climb(J,JGC,TFF), length(JGC, L1C),
 	cpu_todas_jogadas_expand(J,JGE,TFF), length(JGE, L2E),
 	QRes is L1C+L2E,
-	Next is N+1,
+	Next is N+1,	
 	(
 	QRes < Q 
 		-> 	qualidade_aux(Next, QRes,  Pcurr,CL1curr,CL2curr, Pnext,CL1next,CL2next,    G, J)
