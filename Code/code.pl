@@ -349,7 +349,7 @@ main_loop(3) :-
 	( ML < 10
 		-> main_jogador_computador_dificil(J);
 			main_jogador_computador_facil(J)
-	)
+	),
 	!,
 	(mao_vazia(J) ->  main_victoria(J); main_loop(3)).
 	
