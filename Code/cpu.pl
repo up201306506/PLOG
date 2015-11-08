@@ -238,22 +238,33 @@ cpu_pode_jogar_peca_climb([V1|V2], [C1|L1], [C2|L2],T) :-
 %%	Ver a qualidade		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
+qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
+	tabuleiro(T),
 	jogador(J),
 	cpu_todas_jogadas_climb_com_resultado(J,G,T),
 	G \= [],
 	jogador(Joutro), Joutro \= J,
-	qualidade_aux(1, 10000, [P,CL1,CL2], G, Joutro).
-	
-	
-qualidade_a_melhor_jogada(J, [P,CL1,CL2], T) :-
+	write('Aqui vou eu Climb'), nl,
+	qualidade_aux(1, 10000, P,CL1,CL2,[],[],[], G, Joutro).
+qualidade_a_melhor_jogada(J, P,CL1,CL2) :-
+	tabuleiro(T),
 	jogador(J),
 	cpu_todas_jogadas_expand_com_resultado(J,G,T),
 	G \= [],
 	jogador(Joutro), Joutro \= J,
-	qualidade_aux(1, 30000, [P,CL1,CL2], G, Joutro).
+	write('Aqui vou eu Expand'), nl,
+	qualidade_aux(1, 30000, P,CL1,CL2,[],[],[], G, Joutro).
+
+
+qualidade_aux(N, _, P,CL1,CL2,PRes,CL1Res,CL2Res, G, _) :-
+	length(G, L),
+	N > L,
+	write('Estou a terminar'),nl,
+	P is PRes,		write(P),nl,
+	CL1 is CL1Res,	write(CL1),nl,
+	CL2 is CL2Res, 	write(CL2),nl.
 	
-qualidade_aux(N, Q, [P,CL1,CL2], G, J) :-
+qualidade_aux(N, Q, P,CL1,CL2,PRes,CL1Res,CL2Res, G, J) :-
 	length(G, L),
 	N =< L,
 	list_element_at(Valores,G,N),
@@ -263,13 +274,13 @@ qualidade_aux(N, Q, [P,CL1,CL2], G, J) :-
 		list_element_at(TFF,Valores,4),
 	cpu_todas_jogadas_climb(J,JGC,TFF), length(JGC, L1C),
 	cpu_todas_jogadas_expand(J,JGE,TFF), length(JGE, L2E),
-	Res is L1C+L2E,
-	write(Res), nl,
+	QRes is L1C+L2E,
+	write(Pnext),write(','),write(CL1next),write(','),write(CL2next),write(','),write(QRes), nl,
 	Next is N+1,
 	(
-	Res < Q 
-		-> 	qualidade_aux(Next, Res, [Pnext,CL1next,CL2next], G, J)
-		;	qualidade_aux(Next, Q, [P,CL1,CL2], G, J)
+	QRes < Q 
+		-> 	qualidade_aux(Next, QRes,   P,CL1,CL2,Pnext,CL1next,CL2next,    G, J)
+		;	qualidade_aux(Next, Q,   P,CL1,CL2,PRes,CL1Res,CL2Res,     G, J)
 	).
 	
 	
@@ -326,5 +337,5 @@ tabuleiro_se_jogasse_peca([V1|V2], [C1|L1], [C2|L2], TFF) :-
 				tabuleiro_jogar_peca([7|7],[7|5],[7|6]),
 				mao_reiniciar(jogador1),mao_acrescentar_peca([[6|6]], jogador1), 
 				mao_reiniciar(jogador2),mao_acrescentar_peca([[1|7]], jogador2),mao_acrescentar_peca([[6|7]], jogador2),
-				tabuleiro(T), qualidade_a_melhor_jogada(jogador2, [P,CL1,CL2], T),
+				qualidade_a_melhor_jogada(jogador2, P,CL1,CL2),
 				write(P),write(','),write(CL1),write(','),write(CL2),nl.
