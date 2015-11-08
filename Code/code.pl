@@ -332,9 +332,17 @@ main_loop(1) :-
 	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
 	
 main_loop(2) :-
-	repeat,
-	cls,
-	mostra_tabuleiro(_).
+	jogador_escolhido(J),
+	(J = 'jogador1' -> main_jogador_humano(J); main_jogador_computador_facil(J)),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
+
+main_loop(3) :-
+	jogador_escolhido(J),
+	main_jogador_computador_facil(J),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
+	
 	
 main_victoria(J) :-
 	cls,
@@ -391,7 +399,7 @@ main_jogador_computador_facil(J) :-
 		mostra_tabuleiro(_),
 		mostra_mao_jogador(J),
 	%Encontra a listade todas as jogadas possiveis, com prioridade a Climb
-		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),	
+		write('O computador '), write(J), write(' esta escolher uma peca para jogar...'), nl, sleep(1),	
 		(
 			(cpu_todas_jogadas_expand(J,G,T), G \= [], Type is 2);
 			(cpu_todas_jogadas_climb(J,G,T), G \= [], Type is 1)
@@ -403,7 +411,7 @@ main_jogador_computador_facil(J) :-
 		nl, write('Type:'), write(Type),
 		nl,write('Peca escolhida: ['), write(V1), write('|'), write(V2), write('].'), nl,
 		write('Posicao Escolhida: '), write(C1), write(':'), write(L1),write(', Cauda:'), write(C2), write(':'), write(L2), nl,
-		sleep(4),
+		sleep(5),
 	%Verificar se e valido
 		!,
 		(Type = 1 

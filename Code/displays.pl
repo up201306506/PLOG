@@ -37,8 +37,9 @@ menu_dificuldade :-
 	write('++ ---------------------------------- ++'), nl,
 	write('++  1 - Fácil                         ++'), nl,
 	write('++  2 - Dificil                       ++'), nl,
+	write('++  3 - CPU vs CPU                    ++'), nl,
 	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	read(I), I < 3, I > 0,
+	read(I), I < 4, I > 0,
 	!,
 	jogar(I).
 	
