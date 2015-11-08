@@ -44,7 +44,11 @@ jogador_escolhido(jogador1).
 :- dynamic estado/1.
 estado(T, J) :- tabuleiro(T), jogador_escolhido(J).
 
-
+:- dynamic baralho/1.
+baralho([ [0|0], [0|1], [0|2], [0|3], [0|4], [0|5], [0|6], [0|7], [1|1], [1|2], 
+			[1|3], [1|4], [1|5], [1|6], [1|7], [2|2], [2|3], [2|4], [2|5], [2|6],
+			[2|7], [3|3], [3|4], [3|5], [3|6], [3|7], [4|4], [4|5], [4|6], [4|7],
+			[5|5], [5|6], [5|7], [6|6], [6|7], [7|7] ]).
 
 
 
@@ -517,6 +521,26 @@ tabuleiro_reiniciar :-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	mao jogador		%%
 %%%%%%%%%%%%%%%%%%%%%%
+	%		
+	%	:- mao_acrescentar_peca(P, J).
+	%		Acrescenta a peça [P] à mão do jogador J. 
+	%		
+	%	:- mao_remover_peca(J, P).
+	%		Remove a peça P da mão do jogador J, se existir.
+	%		
+	%		
+	%	:- mao_escolher_peca(J, N, P).
+	%		Devolve em P a N-ésima peça da mão do jogador J.	
+	%		
+	%	:- mao_vazia(J).
+	%		Sucesso se o jogador não tiver peças na mão.			
+	%		
+	%	:- mao_quem_tem_peca(P, J).
+	%		Procura a peça P nas mãos dos jogadores todos e devolve em J o jogador que a tiver.	
+	%		
+	%	:- mao_reiniciar(J).
+	%		Esvazia a mão do jogador J.			
+	%		
 
 mao_acrescentar_peca(P, J) :- 	mao(J, V),
 								append(P,V,N),
@@ -554,12 +578,21 @@ mao_reiniciar(J) :-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Baralho			%%
 %%%%%%%%%%%%%%%%%%%%%%
-
-:- dynamic baralho/1.
-baralho([ [0|0], [0|1], [0|2], [0|3], [0|4], [0|5], [0|6], [0|7], [1|1], [1|2], 
-			[1|3], [1|4], [1|5], [1|6], [1|7], [2|2], [2|3], [2|4], [2|5], [2|6],
-			[2|7], [3|3], [3|4], [3|5], [3|6], [3|7], [4|4], [4|5], [4|6], [4|7],
-			[5|5], [5|6], [5|7], [6|6], [6|7], [7|7] ]).
+	%		
+	%	:- baralho_vazio.
+	%		Passa se o baralo estiver vazio.
+	%		
+	%	:- baralho_get_peca_from(P).
+	%		Remove uma peça aleatória ao baralho e devolve-a em P.	
+	%		
+	%	:-baralho_dar_as_pecas.	
+	%		Corre o predicado baralho_get_peca_from repetidamente de forma a dar todas as peças do baralho
+	%		aos jogadores, alternadamete. Pára quando o baralho estiver vazio.
+	%		
+	%	:- baralho_reiniciar.
+	%		Reinicia o baralho no seu estado original, com uma cópia de cada peça.
+	%
+	%
 
 baralho_vazio :- 	baralho(B),
 					mostra_linha(B),
