@@ -18,17 +18,15 @@ menu_principal :-
 	write('++ ---------------------------------- ++'), nl,
 	write('++            1 - Jogar               ++'), nl,
 	write('++            2 - Jogar CPU           ++'), nl,
-	write('++            3 - Regras              ++'), nl,
-	write('++            4 - Sair                ++'), nl,
+	write('++            3 - Sair                ++'), nl,
 	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	readInt('Escrever a opção seguida de um ponto', I, 1, 4),
+	readInt('Escrever a opção seguida de um ponto', I, 1, 3),
 	!,
 	main_menu_opcoes(I).
 	
 main_menu_opcoes(1) :-	jogar(0).
 main_menu_opcoes(2) :-	menu_dificuldade.
-main_menu_opcoes(3) :- 	menu_regras(1).
-main_menu_opcoes(4).	
+main_menu_opcoes(3).	
 	
 	
 menu_dificuldade :-
@@ -42,47 +40,6 @@ menu_dificuldade :-
 	read(I), I < 4, I > 0,
 	!,
 	jogar(I).
-	
-menu_regras(1) :-
-	cls,
-	write('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'), nl,
-	write(' O Dominup é uma variante do jogo do Dominó, pelo que tem grandes semelhanças no modo como é jogado'), nl,
-	nl,
-	write(' As duas principais diferenças nesta versão do jogo são:'), nl,
-	write('     * Há mais pecas no baralho '), nl,
-	write('     * As pecas podem ser jogadas uma sobre as outras '), nl,
-	write('                                       '), nl,
-	write(' 0-sair                 1-continuar     '), nl,
-	write('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'), nl,
-	readInt('', I, 0, 1),
-	!,
-	menu_regras_aux(I, 1).
-menu_regras(2) :-
-	cls,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	write('   2                                    '), nl,
-	write(' 0-sair                 1-continuar     '), nl,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	readInt('', I, 0, 1),
-	!,
-	menu_regras_aux(I, 2).
-menu_regras(3) :-
-	cls,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	write('    3                                   '), nl,
-	write(' 0-sair                 1-continuar     '), nl,
-	write('++++++++++++++++++++++++++++++++++++++++'), nl,
-	readInt('', I, 0, 1),
-	!,
-	menu_regras_aux(I, 3).
-	
-menu_regras(4) :-	
-	menu_principal.
-	
-menu_regras_aux(0, _) :-	menu_principal.
-menu_regras_aux(1, N) :- 	P is N+1,
-							menu_regras(P).
-	
 	
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
