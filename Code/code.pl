@@ -4,6 +4,7 @@
 :- use_module(library(system)).
 :- use_module(displays).
 :- use_module(auxiliar).
+:- use_module(cpu).
 
 %:-now(time), setrand(time).
 
@@ -296,7 +297,6 @@ jogar(Dificuldade) :-
 	mao_reiniciar(jogador2),
 	tabuleiro_reiniciar,
 	baralho_dar_as_pecas,
-	mostra_tabuleiro(_),
 	!,
 	main_jogada_inicial,
 	!,
@@ -317,9 +317,11 @@ main_loop(0) :-
 		(mao_vazia(J) ->  main_victoria(J); main_loop(0)).
 
 main_loop(1) :-
-	repeat,
-	cls,
-	mostra_tabuleiro(_).
+	jogador_escolhido(J),
+	(J = 'jogador1' -> main_jogador_humano(J); main_jogador_computador_facil(J)),
+	!,
+	(mao_vazia(J) ->  main_victoria(J); main_loop(1)).
+	
 main_loop(2) :-
 	repeat,
 	cls,
@@ -370,9 +372,25 @@ main_jogador_humano(J) :-
 	%Ver se o outro jogador pode jogar, trocar a vez se sim
 		!,
 		jogador(Joutro), Joutro \= J,
-		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J)),	
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
 	%expandir o tabuleiro se necessário
 		tabuleiro_dimensiona, tabuleiro_dimensiona.
+		
+main_jogador_computador_facil(J) :-
+		cls,
+		mostra_tabuleiro(_),
+		mostra_mao_jogador(J),
+		mao(J,M), length(M, ML),
+	%Escolher a Peca
+		write('O computador esta escolher uma peca para jogar...'), nl, sleep(3),
+		
+	%Ver se o outro jogador pode jogar, trocar a vez se sim
+		!,
+		jogador(Joutro), Joutro \= J,
+		(jogador_pode_jogar(Joutro) -> jogador_trocar_vez(J); true),	
+	%expandir o tabuleiro se necessário
+		tabuleiro_dimensiona, tabuleiro_dimensiona.
+		
 			
 
 %%%%%%%%%%%%%%%%%%%%%%
