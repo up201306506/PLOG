@@ -1,9 +1,10 @@
 
-:- use_module(library(random)).
 :- use_module(library(lists)).
+:- use_module(library(random)).
+:- use_module(display).
 
 %%%%%%%%%%%%%%%%%%%%%%
-%%					%%
+%%	Init			%%
 %%%%%%%%%%%%%%%%%%%%%%
 /*
 	
@@ -24,14 +25,18 @@ tabuleiro(
 		[ [0,44],[0,46],[0,46],[0,47],[0,49],[0,49],[0,51],[0,50],[0,52],[0,52] ]
 		
 	]
-)
+).
 
 :- dynamic pistas_colunas/1.
 :- dynamic pistas_linhas/1.
 
 pistas_colunas(
 	[[2,1],[2,2],[4,3],[5,3],[4,2],[4,2],[6,1],[7,3],[5,4],[4,3]]
-)
+).
 pistas_linhas(
 	[[3,3],[4,3],[5,3],[5,2],[4,1],[4,3],[7,3],[2,2],[5,2],[4,2]]
-)
+).
+
+get_Tab(T) :- tabuleiro(T).
+get_PC(PC) :- pistas_colunas(PC).
+get_PL(PL) :- pistas_linhas(PL).
