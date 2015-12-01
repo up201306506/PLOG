@@ -142,6 +142,20 @@ mostra_linhas_valores(T,NC,L,C):-		tabuleiro_buscar_valor(L, C, T, [P1,R1]),
 										mostra_linhas_valores(T,NC,L,C2).
 										
 mostra_linhas_separador(_,_,NC,_,C) :- C > NC.										
-mostra_linhas_separador(T,NL,NC,L,C) :-	write('---+'),
+mostra_linhas_separador(T,NL,NC,L,C) :-	
+										
+										L2 is L + 1,
+										(
+											L2 > NL
+											->	write('---')
+											;	tabuleiro_buscar_valor(L, C, T, [P1,R1]),tabuleiro_buscar_valor(L2, C, T, [P2,R2]),
+												(
+													R1 \= R2
+													->	write('---')
+													;	write('   ')
+												)
+												
+										),
 										C2 is C + 1,
+										write('+'),
 										mostra_linhas_separador(T,NL,NC,L,C2).
