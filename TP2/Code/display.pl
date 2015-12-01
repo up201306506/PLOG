@@ -48,6 +48,13 @@ cls :- write('\e[2J').
 */
 
 
+
+%
+%	get_Tab(T),get_PC(PC),get_PL(PL),mostra_tabuleiro(PL,PC,T).
+%
+
+
+
 mostra_tabuleiro(PC,PL,T) :-	length(PC,NC),
 								length(PL,NL),
 								%ver se NL e NC são iguas aos da tabela
@@ -88,12 +95,17 @@ mostra_pista_coluna_Q(PC, NC) :-write('Q '),
 								
 mostra_linhas_tabelas(_, _, NL, _,N) :- N > NL.
 mostra_linhas_tabelas(PL,T,NL,NC,N) :-	mostra_pista_linha_R(N,PL),  
+											mostra_linhas_valores(T,NC,N,1), 
 											nl,
 										write('|   ||'),
+											mostra_linhas_valores(T,NC,N,1), 
 											nl,
 										mostra_pista_linha_Q(N,PL),  
+											mostra_linhas_valores(T,NC,N,1), 
 											nl,
-										write('+---++'), nl,
+										write('+---++'), 
+											mostra_linhas_separador(T,NC,N,1),
+											nl,
 										N2 is N+1,
 										mostra_linhas_tabelas(PL,T,NL,NC,N2).
 								
@@ -107,3 +119,19 @@ mostra_pista_linha_Q(N,PL) :- 	write('|Q '),
 								nth1(N,PL,[_,X]),
 								write(X),
 								write('||').
+
+mostra_linhas_valores(_,NC,_,C):- C > NC.								
+mostra_linhas_valores(T,NC,L,C):-		tabuleiro_buscar_valor(L, C, T, [P,R]),
+										(
+											P =:= 1
+											->	write('XXX')
+											;	write('   ')
+										),
+										write('|'),
+										C2 is C + 1,
+										mostra_linhas_valores(T,NC,L,C2).
+										
+mostra_linhas_separador(_,NC,_,C) :- C > NC.										
+mostra_linhas_separador(T,NC,L,C) :-	write('---+'),
+										C2 is C + 1,
+										mostra_linhas_separador(T,NC,L,C2).
