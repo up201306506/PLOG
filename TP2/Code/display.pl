@@ -104,7 +104,7 @@ mostra_linhas_tabelas(PL,T,NL,NC,N) :-	mostra_pista_linha_R(N,PL),
 											mostra_linhas_valores(T,NC,N,1), 
 											nl,
 										write('+---++'), 
-											mostra_linhas_separador(T,NC,N,1),
+											mostra_linhas_separador(T,NL,NC,N,1),
 											nl,
 										N2 is N+1,
 										mostra_linhas_tabelas(PL,T,NL,NC,N2).
@@ -121,17 +121,27 @@ mostra_pista_linha_Q(N,PL) :- 	write('|Q '),
 								write('||').
 
 mostra_linhas_valores(_,NC,_,C):- C > NC.								
-mostra_linhas_valores(T,NC,L,C):-		tabuleiro_buscar_valor(L, C, T, [P,R]),
+mostra_linhas_valores(T,NC,L,C):-		tabuleiro_buscar_valor(L, C, T, [P1,R1]),
 										(
-											P =:= 1
+											P1 =:= 1
 											->	write('XXX')
 											;	write('   ')
 										),
-										write('|'),
 										C2 is C + 1,
+										(
+											C2 > NC
+											->	write('|')
+											;	tabuleiro_buscar_valor(L, C2, T, [P2,R2]),
+												(
+													R1 \= R2
+													->	write('|')
+													;	write(' ')
+												)
+												
+										),
 										mostra_linhas_valores(T,NC,L,C2).
 										
-mostra_linhas_separador(_,NC,_,C) :- C > NC.										
-mostra_linhas_separador(T,NC,L,C) :-	write('---+'),
+mostra_linhas_separador(_,_,NC,_,C) :- C > NC.										
+mostra_linhas_separador(T,NL,NC,L,C) :-	write('---+'),
 										C2 is C + 1,
-										mostra_linhas_separador(T,NC,L,C2).
+										mostra_linhas_separador(T,NL,NC,L,C2).
