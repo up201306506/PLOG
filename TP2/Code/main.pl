@@ -4,6 +4,7 @@
 :- use_module(library(clpfd)).
 :- use_module(display).
 :- use_module(auxiliar).
+:- use_module(testes).
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Program			%%
