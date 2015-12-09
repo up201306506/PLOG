@@ -1,9 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
-/*
-
-*/
 tabuleiro_buscar_valor(L, C, T, [P,R]) :-
 			nth1(L, T, LI),
 			nth1(C,LI,[P,R]).
@@ -30,7 +27,7 @@ get_Reg(RT) :- tabula_regioes(PL).
 	Testar mostra_tabuleiro
 
 	| ? - get_Tab(T),get_PC(PC),get_PL(PL),mostra_tabuleiro(PL,PC,T).	
-*/	
+
 	tabuleiro(
 	[ 	 
 		[ [0,1],[0,1],[1,2],[0,3],[0,3],[1,4],[0,5],[0,5],[1,6],[0,7] ],
@@ -52,7 +49,7 @@ get_Reg(RT) :- tabula_regioes(PL).
 	pistas_linhas(
 		[[3,3],[4,3],[5,3],[5,2],[4,1],[4,3],[7,3],[2,2],[5,2],[4,2]]
 	).
-/*
+
  =============================================================================================
 	
 */	

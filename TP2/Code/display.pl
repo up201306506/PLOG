@@ -1,7 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Limpar			%%
 %%%%%%%%%%%%%%%%%%%%%%	
-
 /* 
 	cls.
 		Limpa o terminal e empurra para o topo novos elementos que forem mostrados. 
