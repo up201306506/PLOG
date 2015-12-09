@@ -1,60 +1,25 @@
-
-
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Limpar			%%
-%%%%%%%%%%%%%%%%%%%%%%
-/*
-	Funções Importantes:	
-		?-cls.
-			Limpa o terminal e empurra para o topo novos elementos que forem mostrados.
-*/
-	
+%%%%%%%%%%%%%%%%%%%%%%	
 
+/* 
+	cls.
+		Limpa o terminal e empurra para o topo novos elementos que forem mostrados. 
+*/
 cls :- write('\e[2J').
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Tabuleiro		%%
 %%%%%%%%%%%%%%%%%%%%%%
-/*
 
-	?- mostra_tabuleiro(PC,PL,T)
+/*
+	mostra_tabuleiro(PC,PL,T)
+		Mostra um tabuleiro com soluções.
 		PC - Lista de pistas nas Colunas
 		PL - Lista de pistas nas Linhas
 		T - Tabela de valores
 
-
-
-     +---+---+---+---+---+---+---+---+---+---+
-     |R 1|R 1|R 1|R 1|R 1|R 1|R 1|R 1|R 1|R 1|
-     |Q 2|Q12|Q 8|Q 2|Q 2|Q 2|Q 2|Q 2|Q 2|Q 2| 
-    ++---+---+---+---+---+---+---+---+---+---+
-+---++---+---+---+---+---+---+---+---+---+---+
-|R 1||   |   |XXX|   |   |   |   |   |   |   |
-|   ||   |   |XXX|   |   |   |   |   |   |   |
-|Q 2||   |   |XXX|   |   |   |   |   |   |   |
-+---++---+---+---+   +---+---+---+   +---+---+
-|R 1||   |   |       |   |   |       |   |   |
-|   ||   |   |       |   |   |       |   |   |
-|Q 2||   |   |       |   |   |       |   |   |
-+---++---+---+---+---+---+---+   +   +---+---+
-|R 1||   |   |   |   |   |   |       |   |   |
-|   ||   |   |   |   |   |   |       |   |   |
-|Q 2||   |   |   |   |   |   |       |   |   |
-+---++---+---+---+---+---+---+---+---+---+---+
-|R 1||   |   |   |   |   |   |   |   |   |   |
-|   ||   |   |   |   |   |   |   |   |   |   |
-|Q 2||   |   |   |   |   |   |   |   |   |   |
-+---++---+---+---+---+---+---+---+---+---+---+
 */
-
-
-
-%
-%	get_Tab(T),get_PC(PC),get_PL(PL),mostra_tabuleiro(PL,PC,T).
-%
-
-
-
 mostra_tabuleiro(PC,PL,T) :-	length(PC,NC),
 								length(PL,NL),
 								%ver se NL e NC são iguas aos da tabela
@@ -159,3 +124,4 @@ mostra_linhas_separador(T,NL,NC,L,C) :-
 										C2 is C + 1,
 										write('+'),
 										mostra_linhas_separador(T,NL,NC,L,C2).
+										
