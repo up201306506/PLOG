@@ -45,8 +45,9 @@ mostra_separador_topo2(NC) :-	write('---+'),
 								N is NC-1,
 								mostra_separador_topo2(N).
 mostra_pista_coluna_R(_, 0):- nl.		
-mostra_pista_coluna_R(PC, NC) :-write('R '),
+mostra_pista_coluna_R(PC, NC) :-
 								nth1(NC,PC,[X,_]),
+								(X < 10 -> write('R ') ; write('R')),
 								write(X),
 								write('|'),
 								N is NC-1,
@@ -77,8 +78,9 @@ mostra_linhas_tabelas(PL,T,NL,NC,N) :-	mostra_pista_linha_R(N,PL),
 										mostra_linhas_tabelas(PL,T,NL,NC,N2).
 								
 								
-mostra_pista_linha_R(N,PL) :- 	write('|R '),
+mostra_pista_linha_R(N,PL) :- 	
 								nth1(N,PL,[X,_]),
+								(X < 10 -> write('|R ') ; write('|R')),
 								write(X),
 								write('||').
 								

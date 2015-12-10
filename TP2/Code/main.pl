@@ -57,14 +57,21 @@ main :-
 		TabelaRegioes - Matriz com os valores das regiões no tabuleiro vazio
  =============
 */
-solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes)
-
+solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
+	solve_domains_matrix(Solucao, 0,1),	
+	restrict_1stclue(Solucao, PistasLinhas),
+	transpose(Solucao, TSolucao),
+	restrict_1stclue(TSolucao, PistasColunas),
+	
+	append(Solucao, Label),
+	labeling([],Label),
+	
+	tabuleiro_contruir_solucoes(Solucao,TabelaRegioes,TabuleiroFinal),
+	mostra_tabuleiro(PistasLinhas,PistasColunas,TabuleiroFinal).
+	
 /*
 
 	Necessário:
-		Definir 'Solucao' como uma matriz MxN onde M e N são os lengths das pistas
-		Ver se os lengths das pistas equivalem aos da 'TabelaRegioes'
-		Dominio dos valores: 0 ou 1
 		Aplicar restrições:
 			- Contagem dos grupos pintados numa linha igual à primeira pista
 			- Contagem das casas pintadas numa linha igual à segunda pista
@@ -73,4 +80,13 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes)
 */
 
 
-.
+solve_domains_matrix([], _, _).
+solve_domains_matrix([Linha|Resto], Minimo, Maximo) :-
+	domain(Linha,Minimo,Maximo),
+	solve_domains_matrix(Resto, Minimo, Maximo).
+
+
+restrict_1stclue([],[]).
+restrict_1stclue([SolucaoLinha|SolucaoResto], [[Pista|_]|PistasResto]) :-
+	count(1, SolucaoLinha, #=, Pista),
+	restrict_1stclue(SolucaoResto, PistasResto).
