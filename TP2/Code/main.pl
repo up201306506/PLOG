@@ -69,7 +69,10 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	/*Por as tabelas em linha*/
 	append(Solucao, Label),
 	append(TabelaRegioes, Regions),
-	%write(Regions),
+	write(Regions),
+	
+	/*Restringir por regiões*/
+	%restrict_regions(Label, Regions),
 	
 	/*labeling*/
 	labeling([],Label),
@@ -102,11 +105,13 @@ restrict_1stclue([SolucaoLinha|SolucaoResto], [[Pista|_]|PistasResto]) :-
 	
 	
 	
-/*
-restrict_regions([PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]) :-
-	restrict_regions_aux(PrimeiroSolucao, PrimeiroRegions, RestoSolucao, RestoRegions).
 
-restrict_regions_aux(S, R, [], []).
+restrict_regions([],[]).
+restrict_regions([PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]) :-
+	restrict_regions_aux(PrimeiroSolucao, PrimeiroRegions, RestoSolucao, RestoRegions),
+	restrict_regions(RestoSolucao, RestoRegions).
+
+restrict_regions_aux(_, _, [], []).
 restrict_regions_aux(S, R, [PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]):-
-	R #= PrimeiroRegions,
-*/
+	(R =:= PrimeiroRegions -> PrimeiroSolucao #= S; true),
+	restrict_regions_aux(S,R, RestoSolucao, RestoRegions).
