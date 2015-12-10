@@ -58,14 +58,23 @@ main :-
  =============
 */
 solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
+	/*Definir Dominios*/
 	solve_domains_matrix(Solucao, 0,1),	
+	
+	/*Restringir a primeira pista*/
 	restrict_1stclue(Solucao, PistasLinhas),
 	transpose(Solucao, TSolucao),
 	restrict_1stclue(TSolucao, PistasColunas),
 	
+	/*Por as tabelas em linha*/
 	append(Solucao, Label),
+	append(TabelaRegioes, Regions),
+	%write(Regions),
+	
+	/*labeling*/
 	labeling([],Label),
 	
+	/*Display da solução*/
 	tabuleiro_contruir_solucoes(Solucao,TabelaRegioes,TabuleiroFinal),
 	mostra_tabuleiro(PistasLinhas,PistasColunas,TabuleiroFinal).
 	
@@ -90,3 +99,14 @@ restrict_1stclue([],[]).
 restrict_1stclue([SolucaoLinha|SolucaoResto], [[Pista|_]|PistasResto]) :-
 	count(1, SolucaoLinha, #=, Pista),
 	restrict_1stclue(SolucaoResto, PistasResto).
+	
+	
+	
+/*
+restrict_regions([PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]) :-
+	restrict_regions_aux(PrimeiroSolucao, PrimeiroRegions, RestoSolucao, RestoRegions).
+
+restrict_regions_aux(S, R, [], []).
+restrict_regions_aux(S, R, [PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]):-
+	R #= PrimeiroRegions,
+*/
