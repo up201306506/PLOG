@@ -25,7 +25,6 @@
 %main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes).
 
 main :- 
-
 	/* buscar valores a ficheiro*/
 	get_PC(PistasColunas),
 	get_PL(PistasLinhas),
@@ -44,7 +43,7 @@ main :-
 	
 	/*Resolver*/
 	matriz(NumeroLinhas,NumeroColunas,Solucao),
-	solve_crossapix(Solucao,PistasColunas,PistasLinhas,TabelaRegioes).
+	solve_crossapix(Solucao,PistasLinhas,PistasColunas,TabelaRegioes).
 	
 /*
  =============
@@ -69,10 +68,9 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	/*Por as tabelas em linha*/
 	append(Solucao, Label),
 	append(TabelaRegioes, Regions),
-	write(Regions),
 	
 	/*Restringir por regiões*/
-	%restrict_regions(Label, Regions),
+	restrict_regions(Label, Regions),
 	
 	/*labeling*/
 	labeling([],Label),
@@ -113,5 +111,5 @@ restrict_regions([PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions])
 
 restrict_regions_aux(_, _, [], []).
 restrict_regions_aux(S, R, [PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]):-
-	(R =:= PrimeiroRegions -> PrimeiroSolucao #= S; true),
+	(R = PrimeiroRegions -> PrimeiroSolucao #= S; true),
 	restrict_regions_aux(S,R, RestoSolucao, RestoRegions).
