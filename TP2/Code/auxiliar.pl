@@ -3,9 +3,11 @@
 %%%%%%%%%%%%%%%%%%%%%%
 
 /*
+ =============
 	tabuleiro_contruir_solucoes
 		Controi um tabuleiro pronto a ser mostrado no cliente a partir de uma matriz de soluções
 		e outra com os valores das regiões.
+ =============
 */
 tabuleiro_contruir_solucoes(Solucao, Regioes, Tabuleiro):-
 	/*mesmo numero de linhas e colunas em ambas as tabelas input e na de resultado*/
@@ -30,3 +32,19 @@ tabuleiro_contruir_solucoes_aux_linha([],[],[]).
 tabuleiro_contruir_solucoes_aux_linha([Sn|Sr],[Rn|Rr],[Tn|Tr]):-
 	Tn = [Sn,Rn],
 	tabuleiro_contruir_solucoes_aux_linha(Sr,Rr,Tr).
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	Matriz			%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+/*
+ =============
+	matriz
+		Gera uma matriz M*N (m linhas, n colunas)
+ =============
+*/	
+matriz(M,N, Resultado) :-
+        length(Resultado, M),
+        maplist(matriz_aux(N), Resultado).
+
+matriz_aux(L, Ls) :- length(Ls, L).

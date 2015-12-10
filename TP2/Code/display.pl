@@ -2,8 +2,10 @@
 %%	Limpar			%%
 %%%%%%%%%%%%%%%%%%%%%%	
 /* 
+ =============
 	cls.
 		Limpa o terminal e empurra para o topo novos elementos que forem mostrados. 
+ =============
 */
 cls :- write('\e[2J').
 
@@ -12,12 +14,13 @@ cls :- write('\e[2J').
 %%%%%%%%%%%%%%%%%%%%%%
 
 /*
+ =============
 	mostra_tabuleiro(PC,PL,T)
 		Mostra um tabuleiro com soluções.
 		PC - Lista de pistas nas Colunas
 		PL - Lista de pistas nas Linhas
 		T - Tabela de valores
-
+ =============
 */
 mostra_tabuleiro(PC,PL,T) :-	length(PC,NC),
 								length(PL,NL),
@@ -95,7 +98,7 @@ mostra_linhas_valores(T,NC,L,C):-		mostra_tabuleiro_buscar_valor(L, C, T, [P1,R1
 										(
 											C2 > NC
 											->	write('|')
-											;	mostra_tabuleiro_buscar_valor(L, C2, T, [P2,R2]),
+											;	mostra_tabuleiro_buscar_valor(L, C2, T, [_,R2]),
 												(
 													R1 \= R2
 													->	write('|')
@@ -112,7 +115,7 @@ mostra_linhas_separador(T,NL,NC,L,C) :-
 										(
 											L2 > NL
 											->	write('---')
-											;	mostra_tabuleiro_buscar_valor(L, C, T, [P1,R1]),tabuleiro_buscar_valor(L2, C, T, [P2,R2]),
+											;	mostra_tabuleiro_buscar_valor(L, C, T, [_,R1]),mostra_tabuleiro_buscar_valor(L2, C, T, [_,R2]),
 												(
 													R1 \= R2
 													->	write('---')
