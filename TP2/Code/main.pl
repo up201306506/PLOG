@@ -65,7 +65,7 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	transpose(Solucao, TSolucao),
 	restrict_1stclue(TSolucao, PistasColunas),
 	
-	/*Por as tabelas em linha*/
+	/*Pôr as tabelas em linha*/
 	append(Solucao, Label),
 	append(TabelaRegioes, Regions),
 	
@@ -75,20 +75,15 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	/*labeling*/
 	labeling([],Label),
 	
+	/*Restringir a segunda pista, voltar ao labeling se a solução não se encaixar*/
+	restrict_2ndclue(Solucao, PistasLinhas),
+	restrict_2ndclue(TSolucao, PistasColunas),
+	
 	/*Display da solução*/
 	tabuleiro_contruir_solucoes(Solucao,TabelaRegioes,TabuleiroFinal),
 	mostra_tabuleiro(PistasLinhas,PistasColunas,TabuleiroFinal).
 	
-/*
-
-	Necessário:
-		Aplicar restrições:
-			- Contagem dos grupos pintados numa linha igual à primeira pista
-			- Contagem das casas pintadas numa linha igual à segunda pista
-			- Repetir as duas restrições anteriores nas colunas
-			- Elementos que pertençam à mesma região não podem ter valores diferentes
-*/
-
+/*=============*/
 
 solve_domains_matrix([], _, _).
 solve_domains_matrix([Linha|Resto], Minimo, Maximo) :-
@@ -100,8 +95,27 @@ restrict_1stclue([],[]).
 restrict_1stclue([SolucaoLinha|SolucaoResto], [[Pista|_]|PistasResto]) :-
 	count(1, SolucaoLinha, #=, Pista),
 	restrict_1stclue(SolucaoResto, PistasResto).
-	
-	
+
+restrict_2ndclue([],[]).
+restrict_2ndclue([SolucaoLinha|SolucaoResto], [[_,Pista]|PistasResto]) :-
+	restrict_2ndclue_aux(Pista, SolucaoLinha, 0, 0),
+	restrict_2ndclue(SolucaoResto, PistasResto).
+
+restrict_2ndclue_aux(Expected, [], _, Count) :-
+	Expected = Count.
+restrict_2ndclue_aux(Expected, [Elemento|Resto], 0, Count) :-
+	CountPlus is Count+1,
+	(
+		Elemento = 1 
+		->	restrict_2ndclue_aux(Expected, Resto, 1, CountPlus)
+		;	restrict_2ndclue_aux(Expected, Resto, 0, Count)
+	).
+restrict_2ndclue_aux(Expected, [Elemento|Resto], 1, Count) :-
+	(
+		Elemento = 0 
+		->	restrict_2ndclue_aux(Expected, Resto, 0, Count)
+		;	restrict_2ndclue_aux(Expected, Resto, 1, Count)
+	).
 	
 
 restrict_regions([],[]).
@@ -113,3 +127,5 @@ restrict_regions_aux(_, _, [], []).
 restrict_regions_aux(S, R, [PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]):-
 	(R = PrimeiroRegions -> PrimeiroSolucao #= S; true),
 	restrict_regions_aux(S,R, RestoSolucao, RestoRegions).
+
+	
