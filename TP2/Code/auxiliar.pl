@@ -56,9 +56,9 @@ matriz_aux(L, Ls) :- length(Ls, L).
  =============
 */	
 matriz_selecionar_valor(Linha, Coluna, Tabela, Value) :-
-		nth1(Value, Tabela, LI),
+		nth1(Linha,Tabela,LI),
 		nth1(Coluna,LI,Value).
-
+		
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%	Restrições do Main		%%

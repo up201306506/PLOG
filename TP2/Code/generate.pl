@@ -39,10 +39,11 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 		
  =============
 */
+/*
 	generate_puzzle_regions(Solucao, Linhas, Colunas, TabelaRegioes) :-
-		matriz(Linhas, Colunas, TabelaRegioes).
-		
-	generate_puzzle_regions_aux.
+		matriz(Linhas, Colunas, TabelaRegioes),
+		generate_puzzle_regions_aux(Solucao, TabelaRegioes).
+	*/	
 
 
 /*

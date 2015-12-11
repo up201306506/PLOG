@@ -46,14 +46,19 @@
 	test6 :- matriz(2,2,M),solve_domains_matrix(M,0,1),P = [[1,0],[0,0]],restrict_1stclue(M,P),append(M,R) ,labeling([],R).
 
  =============================================================================================
+	Testar selecionar valores numa matriz
+	*/
+	test7(X,Y,Z) :- teste_7_matriz(M),matriz_selecionar_valor(1,1,M,X),matriz_selecionar_valor(2,2,M,Y),matriz_selecionar_valor(3,3,M,Z).
+	teste_7_matriz( [[1,2,3],[4,5,6],[7,8,9]] ).
+	/*
+ =============================================================================================
 	Testar a geração aleatória de puzzles
 	
 	test10(S):- generate_puzzle_solution(10, 10, S).
-  =============================================================================================
+ =============================================================================================
   	Testar a geração pistas e regiões
-	*/
+
 	test11(P):- generate_puzzle_solution(10, 10, S), write(S), nl, generate_puzzle_clues(S, P), write(P).
-	/*
 	test12(R):- .
-  =============================================================================================
+ =============================================================================================
  */	
