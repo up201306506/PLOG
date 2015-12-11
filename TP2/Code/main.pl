@@ -5,6 +5,7 @@
 :- use_module(display).
 :- use_module(auxiliar).
 :- use_module(testes).
+:- use_module(generate).
 
 :- use_module(puzzle).
 
@@ -32,12 +33,8 @@ main :-
 	length(PistasColunas,NumeroColunas),
 	length(PistasLinhas,NumeroLinhas),
 	
-	/*Ver se estão correctos+/
-	transpose(PistasLinhas, TPistasLinhas),
-	transpose(PistasColunas, TPistasColunas),
+	/*Ver se estão correctos*/
 	transpose(TabelaRegioes, TTabelaRegioes),
-	length(TPistasColunas,NumeroLinhas),
-	length(TPistasLinhas,NumeroColunas),
 	length(TabelaRegioes,NumeroLinhas),
 	length(TTabelaRegioes,NumeroColunas),
 	
@@ -50,12 +47,8 @@ main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	length(PistasColunas,NumeroColunas),
 	length(PistasLinhas,NumeroLinhas),
 	
-	/*Ver se estão correctos+/
-	transpose(PistasLinhas, TPistasLinhas),
-	transpose(PistasColunas, TPistasColunas),
+	/*Ver se estão correctos*/
 	transpose(TabelaRegioes, TTabelaRegioes),
-	length(TPistasColunas,NumeroLinhas),
-	length(TPistasLinhas,NumeroColunas),
 	length(TabelaRegioes,NumeroLinhas),
 	length(TTabelaRegioes,NumeroColunas),
 	
@@ -66,7 +59,7 @@ main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 /*
  =============
 	solve_crossapix
-		Resolve um puzzle Cross-a-Pix dado
+		Resolve e mostra um puzzle Cross-a-Pix dado
 		
 		Solucao - Matriz com as regiões pintadas. 0: Branco 1: Pintado
 		PistasLinhas - Lista de pistas dadas nas linhas, de cima para baixo
