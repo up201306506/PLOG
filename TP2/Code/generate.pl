@@ -9,7 +9,10 @@
 */
 
 generate_puzzle(Linhas, Colunas, TabelaRegioes, PistasLinhas, PistasColunas) :-
-	generate_puzzle_solution(Linhas, Colunas, Solucao).
+	generate_puzzle_solution(Linhas, Colunas, Solucao),
+	generate_puzzle_clues(Solucao, PistasLinhas),
+	transpose(Solucao, TS),
+	generate_puzzle_clues(TS, PistasColunas).
 	
 
 
