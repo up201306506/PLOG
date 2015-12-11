@@ -22,13 +22,31 @@
  =============
 */
 
-%main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes).
+
 
 main :- 
 	/* buscar valores a ficheiro*/
 	get_PC(PistasColunas),
 	get_PL(PistasLinhas),
 	get_Reg(TabelaRegioes),
+	length(PistasColunas,NumeroColunas),
+	length(PistasLinhas,NumeroLinhas),
+	
+	/*Ver se estão correctos+/
+	transpose(PistasLinhas, TPistasLinhas),
+	transpose(PistasColunas, TPistasColunas),
+	transpose(TabelaRegioes, TTabelaRegioes),
+	length(TPistasColunas,NumeroLinhas),
+	length(TPistasLinhas,NumeroColunas),
+	length(TabelaRegioes,NumeroLinhas),
+	length(TTabelaRegioes,NumeroColunas),
+	
+	/*Resolver*/
+	matriz(NumeroLinhas,NumeroColunas,Solucao),
+	solve_crossapix(Solucao,PistasLinhas,PistasColunas,TabelaRegioes).
+	
+main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
+	/* Tamanhos dos argumentos*/
 	length(PistasColunas,NumeroColunas),
 	length(PistasLinhas,NumeroLinhas),
 	
@@ -82,50 +100,7 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	/*Display da solução*/
 	tabuleiro_contruir_solucoes(Solucao,TabelaRegioes,TabuleiroFinal),
 	mostra_tabuleiro(PistasLinhas,PistasColunas,TabuleiroFinal).
-	
-/*=============*/
-
-solve_domains_matrix([], _, _).
-solve_domains_matrix([Linha|Resto], Minimo, Maximo) :-
-	domain(Linha,Minimo,Maximo),
-	solve_domains_matrix(Resto, Minimo, Maximo).
 
 
-restrict_1stclue([],[]).
-restrict_1stclue([SolucaoLinha|SolucaoResto], [[Pista|_]|PistasResto]) :-
-	count(1, SolucaoLinha, #=, Pista),
-	restrict_1stclue(SolucaoResto, PistasResto).
-
-restrict_2ndclue([],[]).
-restrict_2ndclue([SolucaoLinha|SolucaoResto], [[_,Pista]|PistasResto]) :-
-	restrict_2ndclue_aux(Pista, SolucaoLinha, 0, 0),
-	restrict_2ndclue(SolucaoResto, PistasResto).
-
-restrict_2ndclue_aux(Expected, [], _, Count) :-
-	Expected = Count.
-restrict_2ndclue_aux(Expected, [Elemento|Resto], 0, Count) :-
-	CountPlus is Count+1,
-	(
-		Elemento = 1 
-		->	restrict_2ndclue_aux(Expected, Resto, 1, CountPlus)
-		;	restrict_2ndclue_aux(Expected, Resto, 0, Count)
-	).
-restrict_2ndclue_aux(Expected, [Elemento|Resto], 1, Count) :-
-	(
-		Elemento = 0 
-		->	restrict_2ndclue_aux(Expected, Resto, 0, Count)
-		;	restrict_2ndclue_aux(Expected, Resto, 1, Count)
-	).
-	
-
-restrict_regions([],[]).
-restrict_regions([PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]) :-
-	restrict_regions_aux(PrimeiroSolucao, PrimeiroRegions, RestoSolucao, RestoRegions),
-	restrict_regions(RestoSolucao, RestoRegions).
-
-restrict_regions_aux(_, _, [], []).
-restrict_regions_aux(S, R, [PrimeiroSolucao|RestoSolucao], [PrimeiroRegions|RestoRegions]):-
-	(R = PrimeiroRegions -> PrimeiroSolucao #= S; true),
-	restrict_regions_aux(S,R, RestoSolucao, RestoRegions).
 
 	
