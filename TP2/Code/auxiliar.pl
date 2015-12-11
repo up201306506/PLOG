@@ -49,6 +49,16 @@ matriz(M,N, Resultado) :-
 
 matriz_aux(L, Ls) :- length(Ls, L).
 
+/*
+ =============
+	matriz_selecionar_valor
+		Devolve em Value o valor na Linha:Coluna
+ =============
+*/	
+matriz_selecionar_valor(Linha, Coluna, Tabela, Value) :-
+		nth1(Value, Tabela, LI),
+		nth1(Coluna,LI,Value).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%	Restrições do Main		%%

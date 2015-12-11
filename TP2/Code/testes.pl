@@ -51,8 +51,9 @@
 	test10(S):- generate_puzzle_solution(10, 10, S).
   =============================================================================================
   	Testar a geração pistas e regiões
-	
-	test11(P):- .
+	*/
+	test11(P):- generate_puzzle_solution(10, 10, S), write(S), nl, generate_puzzle_clues(S, P), write(P).
+	/*
 	test12(R):- .
   =============================================================================================
  */	
