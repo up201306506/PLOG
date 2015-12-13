@@ -7,7 +7,7 @@
 :- use_module(testes).
 :- use_module(generate).
 
-:- use_module(puzzle).
+:- use_module(puzzle2).
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	Program			%%
@@ -84,7 +84,7 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	restrict_regions(Label, Regions),
 	
 	/*labeling*/
-	labeling([],Label),
+	labeling([ff,step,up,all],Label),
 	/*Restringir a segunda pista, voltar ao labeling se a solução não se encaixar*/
 	restrict_2ndclue(Solucao, PistasLinhas),
 	restrict_2ndclue(TSolucao, PistasColunas),

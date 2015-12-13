@@ -64,4 +64,18 @@
 	test20(Size):- generate_puzzle(Size, Size, TabelaRegioes, PistasLinhas, PistasColunas), main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes).
  /*
  =============================================================================================
+ 
+		Ver tempo de excução de p:
+
+		statistics(runtime, [T0|_]),
+			p,
+				statistics(runtime, [T1|_]),
+					T is T1 - T0,
+						format('p/0 took ~3d sec.~n', [T]).
+
+						
+		statistics(runtime, [T0|_]),test20(5),statistics(runtime, [T1|_]),T is T1 - T0,format('p/0 took ~3d sec.~n', [T]).
+		statistics(runtime, [T0|_]),test20(10),statistics(runtime, [T1|_]),T is T1 - T0,format('p/0 took ~3d sec.~n', [T]).
+		statistics(runtime, [T0|_]),test20(12),statistics(runtime, [T1|_]),T is T1 - T0,format('p/0 took ~3d sec.~n', [T]).
+		statistics(runtime, [T0|_]),main,statistics(runtime, [T1|_]),T is T1 - T0,format('p/0 took ~3d sec.~n', [T]).
  */	
