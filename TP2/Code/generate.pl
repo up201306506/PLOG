@@ -36,15 +36,34 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 /*
  =============
 	generate_puzzle_regions
-		
+		Gera uma tabla de regiões válida para a solução dada.
+		Preenche linha a linha, pelo que nem todas as tabelas de regiões são possiveis.
  =============
 */
-/*
+
 	generate_puzzle_regions(Solucao, Linhas, Colunas, TabelaRegioes) :-
 		matriz(Linhas, Colunas, TabelaRegioes),
-		generate_puzzle_regions_aux(Solucao, TabelaRegioes).
-	*/	
+		generate_puzzle_regions_first(Solucao, TabelaRegioes).
 
+	generate_puzzle_regions_first([LinhaS|RestoS], [LinhaR|RestoR]) :-
+		generate_puzzle_regions_first_aux(LinhaS, LinhaR, 0, 0, 1, LastR).
+	
+	generate_puzzle_regions_first_aux([],[], _, _, CR, LR) :- LR = CR.
+	generate_puzzle_regions_first_aux([PrimeiroS|RestoS], [PrimeiroR|RestoR], _, 0, 1, LastR):-
+		PrimeiroR is 1,
+		CR is 2,
+		generate_puzzle_regions_first_aux(RestoS, RestoR, PrimeiroS, PrimeiroR, CR, LastR).
+	generate_puzzle_regions_first_aux([PrimeiroS|RestoS], [PrimeiroR|RestoR], PreviousS, PreviousR, CurrentR, LastR):-
+		( 	PreviousS == PrimeiroS 
+			-> 	(random(0,2,RNG),
+				( 	RNG == 1 
+					->	(PrimeiroR is  PreviousR, CR is CurrentR)
+					;	(PrimeiroR is  CurrentR, CR is CurrentR+1)
+				))
+			; (PrimeiroR is  CurrentR, CR is CurrentR+1)
+		),
+		generate_puzzle_regions_first_aux(RestoS, RestoR, PrimeiroS, PrimeiroR, CR, LastR).
+		
 
 /*
  =============
