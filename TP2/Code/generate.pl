@@ -58,8 +58,8 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 		generate_puzzle_regions_first_aux(RestoS, RestoR, PrimeiroS, PrimeiroR, CR, LastR).
 	generate_puzzle_regions_first_aux([PrimeiroS|RestoS], [PrimeiroR|RestoR], PreviousS, PreviousR, CurrentR, LastR):-
 		( 	PreviousS == PrimeiroS 
-			-> 	(random(0,2,RNG),
-				( 	RNG == 1 
+			-> 	(random(0,3,RNG),
+				( 	RNG < 2 
 					->	(PrimeiroR is  PreviousR, CR is CurrentR)
 					;	(PrimeiroR is  CurrentR, CR is CurrentR+1)
 				))
@@ -76,8 +76,8 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 		generate_puzzle_regions_rest_aux([], [], [], [], _, _, CR, LR) :- LR is CR.
 		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], 0, 0, CR, LR) :-
 			(	APriS == PriS 
-				-> 	(random(0,2,RNG),
-				( 	RNG == 0 
+				-> 	(random(0,3,RNG),
+				( 	RNG < 2 
 					->	(PriR is  APriR, NCR is CR)
 					;	(PriR is  CR, NCR is CR+1)
 				))
@@ -86,14 +86,14 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 			generate_puzzle_regions_rest_aux(RestoS,RestoR,ARestoS,ARestoR, PriS, PriR, NCR, LR).
 		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], PS, PR, CR, LR):-
 			(	APriS == PriS 
-				-> 	(random(0,2,RNG),
-				( 	RNG == 0 
+				-> 	(random(0,3,RNG),
+				( 	RNG < 2 
 					->	(PriR is  APriR, NCR is CR)
 					;	(PriR is  CR, NCR is CR+1)
 				))
 			; 	( 	PS == PriS
-					-> 	(random(0,2,RNG2),
-					( 	RNG2 == 1 
+					-> 	(random(0,3,RNG2),
+					( 	RNG2 < 2 
 						->	(PriR is  PR, NCR is CR)
 						;	(PriR is  CR, NCR is CR+1)
 					))
