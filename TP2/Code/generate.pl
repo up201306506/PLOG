@@ -45,8 +45,10 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 		matriz(Linhas, Colunas, TabelaRegioes),
 		generate_puzzle_regions_first(Solucao, TabelaRegioes).
 
+	/* Geram a primeira linha*/
 	generate_puzzle_regions_first([LinhaS|RestoS], [LinhaR|RestoR]) :-
-		generate_puzzle_regions_first_aux(LinhaS, LinhaR, 0, 0, 1, LastR).
+		generate_puzzle_regions_first_aux(LinhaS, LinhaR, 0, 0, 1, LastR),
+		generate_puzzle_regions_rest(RestoS, RestoR, LinhaS, LinhaR, LastR).
 	
 	generate_puzzle_regions_first_aux([],[], _, _, CR, LR) :- LR = CR.
 	generate_puzzle_regions_first_aux([PrimeiroS|RestoS], [PrimeiroR|RestoR], _, 0, 1, LastR):-
@@ -64,7 +66,23 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 		),
 		generate_puzzle_regions_first_aux(RestoS, RestoR, PrimeiroS, PrimeiroR, CR, LastR).
 		
-
+	/*Geram as restantes linhas*/
+		generate_puzzle_regions_rest([], [], _, _, _).
+		generate_puzzle_regions_rest([LinhaS|RestoS], [LinhaR|RestoR], AnteriorS, AnteriorR, CurrentR) :-
+			generate_puzzle_regions_rest_aux(LinhaS, LinhaR, AnteriorS, AnteriorR, 0, 0, CurrentR, LastR),
+			generate_puzzle_regions_rest(RestoS,RestoR,LinhaS,LinhaR,LastR).
+			
+			
+		generate_puzzle_regions_rest_aux([], [], [], [], _, _, CR, LR) :- LR is CR.
+		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], 0, 0, CR, LR) :- 
+			NCR is CR+1,
+			PriR is NCR,
+			generate_puzzle_regions_rest_aux(RestoS,RestoR,ARestoS,ARestoR, PriS, PriR, NCR, LR).
+		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], PS, PR, CR, LR):-
+			NCR is PR,
+			PriR is PR,
+			generate_puzzle_regions_rest_aux(RestoS,RestoR,ARestoS,ARestoR, PriS, PriR, NCR, LR).
+		
 /*
  =============
 	generate_puzzle_clues
