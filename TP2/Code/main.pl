@@ -85,7 +85,6 @@ solve_crossapix(Solucao, PistasLinhas, PistasColunas, TabelaRegioes) :-
 	
 	/*labeling*/
 	labeling([],Label),
-	
 	/*Restringir a segunda pista, voltar ao labeling se a solução não se encaixar*/
 	restrict_2ndclue(Solucao, PistasLinhas),
 	restrict_2ndclue(TSolucao, PistasColunas),

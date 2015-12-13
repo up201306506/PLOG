@@ -50,15 +50,18 @@
 	test7(X,Y,Z) :- teste_7_matriz(M),matriz_selecionar_valor(1,1,M,X),matriz_selecionar_valor(2,2,M,Y),matriz_selecionar_valor(3,3,M,Z).
 	teste_7_matriz( [[1,2,3],[4,5,6],[7,8,9]] ).
  =============================================================================================
-	Testar a geração aleatória de puzzles
+	Testar a geração aleatória de soluções de puzzles
 	
 	test10(S):- generate_puzzle_solution(10, 10, S).
  =============================================================================================
   	Testar a geração pistas e regiões
 
 	test11(P):- generate_puzzle_solution(10, 10, S), write(S), nl, generate_puzzle_clues(S, P), write(P),nl.
-	*/
 	test12(R):- generate_puzzle_solution(5,5,S), write(S), nl,generate_puzzle_regions(S,5,5,R), write(R), nl.
+ =============================================================================================
+	Testar a geração aleatória de puzzles e a sua resolução
+*/	
+	test20(Size):- generate_puzzle(Size, Size, TabelaRegioes, PistasLinhas, PistasColunas), main_args(Solucao, PistasLinhas, PistasColunas, TabelaRegioes).
  /*
  =============================================================================================
  */	

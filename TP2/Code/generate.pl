@@ -12,7 +12,8 @@ generate_puzzle(Linhas, Colunas, TabelaRegioes, PistasLinhas, PistasColunas) :-
 	generate_puzzle_solution(Linhas, Colunas, Solucao),
 	generate_puzzle_clues(Solucao, PistasLinhas),
 	transpose(Solucao, TS),
-	generate_puzzle_clues(TS, PistasColunas).
+	generate_puzzle_clues(TS, PistasColunas),
+	generate_puzzle_regions(Solucao, Linhas, Colunas, TabelaRegioes).
 	
 
 
@@ -72,15 +73,33 @@ generate_puzzle_solution_aux([Primeiro|Resto]):-
 			generate_puzzle_regions_rest_aux(LinhaS, LinhaR, AnteriorS, AnteriorR, 0, 0, CurrentR, LastR),
 			generate_puzzle_regions_rest(RestoS,RestoR,LinhaS,LinhaR,LastR).
 			
-			
 		generate_puzzle_regions_rest_aux([], [], [], [], _, _, CR, LR) :- LR is CR.
-		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], 0, 0, CR, LR) :- 
-			NCR is CR+1,
-			PriR is NCR,
+		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], 0, 0, CR, LR) :-
+			(	APriS == PriS 
+				-> 	(random(0,2,RNG),
+				( 	RNG == 0 
+					->	(PriR is  APriR, NCR is CR)
+					;	(PriR is  CR, NCR is CR+1)
+				))
+			; (PriR is  CR, NCR is CR+1)
+			),
 			generate_puzzle_regions_rest_aux(RestoS,RestoR,ARestoS,ARestoR, PriS, PriR, NCR, LR).
 		generate_puzzle_regions_rest_aux([PriS|RestoS],[PriR|RestoR],[APriS|ARestoS],[APriR|ARestoR], PS, PR, CR, LR):-
-			NCR is PR,
-			PriR is PR,
+			(	APriS == PriS 
+				-> 	(random(0,2,RNG),
+				( 	RNG == 0 
+					->	(PriR is  APriR, NCR is CR)
+					;	(PriR is  CR, NCR is CR+1)
+				))
+			; 	( 	PS == PriS
+					-> 	(random(0,2,RNG2),
+					( 	RNG2 == 1 
+						->	(PriR is  PR, NCR is CR)
+						;	(PriR is  CR, NCR is CR+1)
+					))
+				;	(PriR is  CR, NCR is CR+1)
+				)
+			),
 			generate_puzzle_regions_rest_aux(RestoS,RestoR,ARestoS,ARestoR, PriS, PriR, NCR, LR).
 		
 /*
